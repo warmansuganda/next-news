@@ -2,8 +2,9 @@ import { useEffect, useState, SyntheticEvent, createElement } from 'react';
 import Paper from '@mui/material/Paper';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import SearchIcon from '@mui/icons-material/Search';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import NewspaperIcon from '@mui/icons-material/Newspaper';
+import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { styled } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import { useRouter } from 'next/router';
@@ -14,14 +15,19 @@ const NavigationAction = styled(BottomNavigationAction)(() => ({
 
 const menus = [
   {
-    name: 'Search',
+    name: 'News',
     url: '/',
-    icon: SearchIcon,
+    icon: NewspaperIcon,
   },
   {
-    name: 'Favorites',
-    url: '/liked',
-    icon: FavoriteIcon,
+    name: 'Library',
+    url: '/library',
+    icon: LocalLibraryIcon,
+  },
+  {
+    name: 'Accouunt',
+    url: '/account',
+    icon: AccountCircleIcon,
   },
 ];
 

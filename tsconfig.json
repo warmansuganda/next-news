@@ -11,6 +11,7 @@
       "@utils/*": ["src/utils/*"],
       "@locales/*": ["locales/*"],
       "@styles/*": ["styles/*"],
+      "@features/*": ["features/*"],
     },
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],

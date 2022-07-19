@@ -1,0 +1,11 @@
+{
+  "required": "{{field}} is required",
+  "invalid": "{{field}} is invalid",
+  "min-char": "{{field}} must be minimum of {{number}} characters",
+  "max-char": "{{field}} must be maximum of {{number}} characters",
+  "min-number": "{{field}} must be minimum {{number}}",
+  "max-number": "{{field}} must be maximum {{number}}",
+  "not-match": "{{field}} is not match",
+  "not-found": "{{field}} not found",
+  "is-exist": "{{field}} already exist"
+}

@@ -1,0 +1,13 @@
+{
+  "required": "{{field}} harus diisi",
+  "invalid": "{{field}} tidak valid",
+  "min-char": "{{field}} minimal {{number}} karakter",
+  "max-char": "{{field}} maksimal {{number}} karakter",
+  "min-number": "{{field}} minimal {{number}}",
+  "max-number": "{{field}} maksimal {{number}}",
+  "not-match": "{{field}} tidak sama",
+  "not-found": "{{field}} tidak ditemukan",
+  "is-exist": "{{field}} sudah digunakan",
+  "must-contains": "{{field}} harus terdiri dari {{pattern}}",
+  "not-contains": "{{field}} tidak boleh mengandung {{pattern}}"
+}

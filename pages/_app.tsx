@@ -21,6 +21,8 @@ import Alert from '@components/Alert';
 import { getDesignTokens } from '@styles/theme';
 import createEmotionCache from '@styles/createEmotionCache';
 
+import 'locales/i18n';
+
 const clientSideEmotionCache = createEmotionCache();
 
 interface MyAppProps extends AppProps {

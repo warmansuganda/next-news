@@ -1,7 +1,7 @@
 {
-  "name": "GitHub Search Console",
-  "short_name": "GitHub Search",
-  "description": "This is GitHub Search Console",
+  "name": "Next News",
+  "short_name": "Next News",
+  "description": "This is Next News",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#007bff",

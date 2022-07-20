@@ -12,11 +12,12 @@ const nextConfig = withPWA({
   reactStrictMode: false,
   swcMinify: true,
   images: {
-    domains: ['avatars.githubusercontent.com'],
+    domains: ['avatars.githubusercontent.com', 'static01.nyt.com'],
   },
   publicRuntimeConfig: {
     API_URL: process.env.API_URL,
     API_TOKEN: process.env.API_TOKEN,
+    CDN_URL: process.env.CDN_URL,
   },
 });
 

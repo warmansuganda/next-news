@@ -25,7 +25,7 @@ const menus = [
     icon: LocalLibraryIcon,
   },
   {
-    name: 'Accouunt',
+    name: 'Account',
     url: '/account',
     icon: AccountCircleIcon,
   },

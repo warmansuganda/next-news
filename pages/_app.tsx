@@ -10,7 +10,6 @@ import { CacheProvider, EmotionCache } from '@emotion/react';
 
 import { wrapper } from '@stores/index';
 import { changeTheme, ThemeType, loadingStart, loadingEnd } from '@stores/app';
-import { initLikeUser } from '@stores/user';
 
 import { useAppSelector, useAppDispatch } from '@hooks/index';
 
@@ -67,10 +66,8 @@ function MyApp({
 
   useEffect(() => {
     const defaultTheme = localStorage.getItem('app:theme');
-    const defaultLiked = localStorage.getItem('app:liked');
 
     dispatch(changeTheme((defaultTheme || 'light') as ThemeType));
-    dispatch(initLikeUser(defaultLiked ? JSON.parse(defaultLiked) : []));
   }, []);
 
   return (

@@ -11,6 +11,9 @@ export const SearchBox = styled(Box)(({ theme }) => ({
   margin: '0 -16px',
   padding: '16px',
   background: theme.palette.background.paper,
+  display: 'grid',
+  gap: '8px',
+  gridTemplateColumns: '1fr 45px',
 }));
 
 export const ListWrapper = styled(Stack)(() => ({

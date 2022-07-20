@@ -6,8 +6,9 @@ import { useRouter } from 'next/router';
 import type { NextPageContext } from 'next';
 import { useTranslation } from 'react-i18next';
 
-import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 
 import DefaultLayout from '@layouts/DefaultLayout';
 import Input from '@components/Input';
@@ -21,10 +22,9 @@ import { SearchBox, ListWrapper } from './styles';
 
 interface HomePorps {
   defaultQuery: string;
-  defaultPage: number;
 }
 
-function Home({ defaultQuery, defaultPage }: HomePorps) {
+function Home({ defaultQuery }: HomePorps) {
   const { news } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -32,42 +32,27 @@ function Home({ defaultQuery, defaultPage }: HomePorps) {
 
   const data = useMemo(() => news.data, [news.data]);
 
-  const [page, setPage] = useState(defaultPage);
+  const [page, setPage] = useState(1);
   const [query, setQuery] = useState(defaultQuery);
 
   useEffect(() => {
-    dispatch(fetchNews({ query: defaultQuery, page: defaultPage }));
+    dispatch(fetchNews({ query: defaultQuery }));
   }, []);
 
   const handleChange = useCallback((keyword: string) => {
     setPage(1);
     setQuery(keyword);
-    if (keyword) dispatch(fetchNews({ query: keyword, page: 1 }));
+    if (keyword) dispatch(fetchNews({ query: keyword }));
     // else dispatch(resetUserData());
 
     router.push({
       query: {
-        query: keyword,
-        page: 1,
+        ...(keyword ? { query: keyword } : {}),
       },
     });
   }, []);
 
   const debounced = useDebouncedCallback(handleChange, 500);
-
-  const handleChangePage = useCallback(
-    (event: ChangeEvent<unknown>, newPage: number) => {
-      setPage(newPage);
-      dispatch(fetchNews({ query, page: newPage }));
-      router.push({
-        query: {
-          query,
-          page: newPage,
-        },
-      });
-    },
-    [query]
-  );
 
   return (
     <DefaultLayout title={t('News')}>
@@ -77,6 +62,9 @@ function Home({ defaultQuery, defaultPage }: HomePorps) {
           defaultValue={query}
           onChange={(e) => debounced(e.target.value)}
         />
+        <IconButton>
+          <FilterAltIcon />
+        </IconButton>
       </SearchBox>
       {data.items.length ? (
         <ListWrapper spacing={2}>
@@ -109,7 +97,6 @@ function Home({ defaultQuery, defaultPage }: HomePorps) {
 
 Home.getInitialProps = ({ query }: NextPageContext) => ({
   defaultQuery: query.query,
-  defaultPage: query.page ? Number(query.page) : 1,
 });
 
 export default Home;

@@ -1,4 +1,6 @@
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import { grey } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
 
 export const Card = styled(Box)(({ theme }) => ({
@@ -15,5 +17,40 @@ export const CardMedia = styled(Box)(({ theme }) => ({
 }));
 
 export const CardContent = styled(Box)(() => ({
-  padding: '16px 8px 0 8px',
+  paddingTop: '16px',
 }));
+
+export const CardActions = styled(Box)(() => ({
+  paddingBottom: '8px',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+}));
+
+export const CardSection = styled(Box)(() => ({
+  color: grey[500],
+  fontSize: '14px',
+  display: 'flex',
+  alignItems: 'center',
+  overflow: 'hidden',
+  flex: 1,
+  '> *': {
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+  },
+  '> :not(:last-child):after': {
+    content: '"•"',
+    fontSize: '10px',
+    marginLeft: '8px',
+    marginRight: '8px',
+  },
+}));
+
+export const PurchaseButton = styled(Button)(() => ({
+  borderRadius: '50px',
+}));
+
+PurchaseButton.defaultProps = {
+  variant: 'outlined',
+};

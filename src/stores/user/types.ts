@@ -1,44 +1,29 @@
-import { User, Repo } from '@services/users/types';
+import { News } from '@services/news/types';
 
-export interface UserDataState {
-  total: number;
-  items: User[];
-  nextPage: boolean;
+export interface WalletLog {
+  id: number;
+  date: Date;
+  type: 'debit' | 'crdit';
+  amount: number;
+  note: string;
+  isRead: boolean;
 }
 
-export interface UserRepoState {
-  total: number;
-  items: Repo[];
-  nextPage: boolean;
+export interface Library {
+  id: number;
+  date: Date;
+  news: News;
 }
 
 export interface UserState {
   search: string;
-  data: UserDataState;
-  liked: User[];
-  selected: User;
-  followers: UserDataState;
-  following: UserDataState;
-  repo: UserRepoState;
+  wallet: {
+    balance: number;
+    logs: WalletLog[];
+  };
+  library: Library[];
 }
 
 export enum UserActionTypes {
   SEARCH = 'user/search',
-  SELECTED = 'user/selected',
-  UPDATE_LIST = 'user/updateList',
-  SEARCH_SUCCESS = 'user/searchSuccess',
-  RESET_DATA = 'user/resetData',
-  LIKE = 'user/like',
-  UNLIKE = 'user/unlike',
-  UPDATE_LIKE = 'user/updateLike',
-  INIT_LIKE = 'user/initLike',
-  UPDATE_LIKE_SUCCESS = 'user/updateLikeSuccess',
-  FETCH_REPO = 'user/fetchRepo',
-  FETCH_REPO_SUCCESS = 'user/fetchRepoSuccess',
-  FETCH_FOLLOWER = 'user/fetchFollower',
-  FETCH_FOLLOWER_SUCCESS = 'user/fetchFollowerSuccess',
-  UPDATE_FOLLOWER_LIST = 'user/updateFollowerList',
-  FETCH_FOLLOWING = 'user/fetchFollowing',
-  FETCH_FOLLOWING_SUCCESS = 'user/fetchFollowingSuccess',
-  UPDATE_FOLLOWING_LIST = 'user/updateFollowingList',
 }

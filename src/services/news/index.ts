@@ -1,6 +1,6 @@
 import client from '@services/client';
-import axios, { AxiosRequestConfig } from 'axios';
-import { User } from './types';
+// import axios, { AxiosRequestConfig } from 'axios';
+// import { User } from './types';
 
 // https://docs.github.com/en/rest/search#constructing-a-search-query
 // const queryString = 'q=' + encodeURIComponent('GitHub Octocat in:readme user:defunkt');

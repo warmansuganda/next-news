@@ -13,18 +13,16 @@ import { useAppSelector } from '@hooks/index';
 
 interface DefaultLayoutProps {
   children: ReactNode | ReactNode[];
-  title?: string;
   accessoryLeft?: ReactNode;
 }
 
-function DefaultLayout({ children, title, accessoryLeft }: DefaultLayoutProps) {
+function DefaultLayout({ children, accessoryLeft }: DefaultLayoutProps) {
   const { t } = useTranslation();
   const { user } = useAppSelector((state) => state);
 
   return (
     <>
       <Header
-        title={title}
         accessoryLeft={accessoryLeft}
         accessoryRight={
           <Tooltip title={t('Your balance')} arrow>

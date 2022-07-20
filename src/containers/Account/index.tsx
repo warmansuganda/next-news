@@ -20,7 +20,7 @@ function Account() {
   };
 
   return (
-    <DefaultLayout title={t('News')}>
+    <DefaultLayout>
       <Tooltip title="Toggle dark mode" arrow>
         <Switch
           checked={app.theme === 'dark'}

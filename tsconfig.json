@@ -12,6 +12,7 @@
       "@locales/*": ["locales/*"],
       "@styles/*": ["styles/*"],
       "@features/*": ["features/*"],
+      "@constants/*": ["src/constants/*"],
     },
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],

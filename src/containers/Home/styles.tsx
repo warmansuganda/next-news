@@ -4,16 +4,29 @@ import { grey } from '@mui/material/colors';
 
 import { styled } from '@mui/material/styles';
 
-export const SearchBox = styled(Box)(({ theme }) => ({
+export const ToolBox = styled(Box)(({ theme }) => ({
   position: 'sticky',
   top: '72px',
   zIndex: 5,
   margin: '0 -16px',
   padding: '16px',
   background: theme.palette.background.paper,
+}));
+
+export const SearchBox = styled(Box)(() => ({
   display: 'grid',
   gap: '8px',
-  gridTemplateColumns: '1fr 45px',
+  // gridTemplateColumns: '1fr 45px',
+  marginBottom: '16px',
+}));
+
+export const FilterBox = styled(Stack)(() => ({
+  overflowX: 'auto',
+  scrollbarWidth: 'none',
+  msOverflowStyle: 'none',
+  '::-webkit-scrollbar': {
+    display: 'none',
+  },
 }));
 
 export const ListWrapper = styled(Stack)(() => ({

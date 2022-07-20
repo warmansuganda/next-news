@@ -1,12 +1,15 @@
 import { ReactNode } from 'react';
-import Paper from '@mui/material/Paper';
-import Switch from '@mui/material/Switch';
-import Tooltip from '@mui/material/Tooltip';
+import { useTranslation } from 'react-i18next';
+import numeral from 'numeral';
 
+import Paper from '@mui/material/Paper';
+import Tooltip from '@mui/material/Tooltip';
+import Button from '@mui/material/Button';
+
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import Header from '@components/Header';
 
-import { useAppSelector, useAppDispatch } from '@hooks/index';
-import { changeTheme, ThemeType } from '@stores/app';
+import { useAppSelector } from '@hooks/index';
 
 interface DefaultLayoutProps {
   children: ReactNode | ReactNode[];
@@ -15,14 +18,8 @@ interface DefaultLayoutProps {
 }
 
 function DefaultLayout({ children, title, accessoryLeft }: DefaultLayoutProps) {
-  const { app } = useAppSelector((state) => state);
-  const dispatch = useAppDispatch();
-
-  const handleChangeTheme = (theme: ThemeType) => dispatch(changeTheme(theme));
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    handleChangeTheme(event.target.checked ? 'dark' : 'light');
-  };
+  const { t } = useTranslation();
+  const { user } = useAppSelector((state) => state);
 
   return (
     <>
@@ -30,12 +27,10 @@ function DefaultLayout({ children, title, accessoryLeft }: DefaultLayoutProps) {
         title={title}
         accessoryLeft={accessoryLeft}
         accessoryRight={
-          <Tooltip title="Toggle dark mode" arrow>
-            <Switch
-              checked={app.theme === 'dark'}
-              onChange={handleChange}
-              inputProps={{ 'aria-label': 'controlled' }}
-            />
+          <Tooltip title={t('Your balance')} arrow>
+            <Button startIcon={<MonetizationOnIcon />}>
+              {numeral(user.wallet.balance).format('0,0')}
+            </Button>
           </Tooltip>
         }
       />

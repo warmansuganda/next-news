@@ -5,8 +5,8 @@ const { publicRuntimeConfig: config } = getConfig();
 
 const client = axios.create({
   baseURL: config.API_URL,
-  headers: {
-    Authorization: `token ${config.API_TOKEN}`,
+  params: {
+    'api-key': config.API_TOKEN,
   },
 });
 

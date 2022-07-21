@@ -17,6 +17,7 @@ import {
   CardSection,
   PurchaseButton,
 } from './styles';
+import NewsCardPlaceHolder from './placeholder';
 
 const { publicRuntimeConfig: config } = getConfig();
 
@@ -24,7 +25,7 @@ interface NewsCardProps {
   data: News;
 }
 
-export default function NewsCard({ data }: NewsCardProps) {
+function NewsCard({ data }: NewsCardProps) {
   const { t } = useTranslation();
 
   const media = useMemo(() => {
@@ -65,3 +66,7 @@ export default function NewsCard({ data }: NewsCardProps) {
     </Card>
   );
 }
+
+export default Object.assign(NewsCard, {
+  Placeholder: NewsCardPlaceHolder,
+});

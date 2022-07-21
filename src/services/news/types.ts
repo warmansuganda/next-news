@@ -7,6 +7,7 @@ export interface Author {
 
 export interface News {
   uri: string;
+  web_url: string;
   pub_date: Date;
   headline: {
     main: string;
@@ -23,6 +24,7 @@ export interface News {
 
 export interface MostPopularNews {
   uri: string;
+  url: string;
   published_date: Date;
   title: string;
   abstract: string;

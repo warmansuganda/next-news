@@ -20,6 +20,7 @@ import { useAppSelector, useAppDispatch } from '@hooks/index';
 import { fetchNews, fetchMoreNews, fetchMostPopularNews } from '@stores/news';
 import { ARTICLE_DETAIL } from '@constants/path';
 import { QueryParams } from '@services/types';
+import { base64Ecode } from '@utils/base64';
 
 import { ToolBox, SearchBox, ListWrapper, FilterBox } from './styles';
 import filters from './filters.json';
@@ -131,7 +132,9 @@ function Home({ defaultQuery, defaultFilter }: HomePorps) {
           key={item.uri}
           href={{
             pathname: ARTICLE_DETAIL,
-            query: { username: item.uri },
+            query: {
+              id: base64Ecode(item.web_url),
+            },
           }}
         >
           <a style={{ textDecoration: 'none', color: 'inherit' }}>

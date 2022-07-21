@@ -91,6 +91,7 @@ const fetchMostPopularNewsEpic: Epic<AnyAction, AnyAction> = (action$) =>
             })
             .map((item: MostPopularNews) => ({
               uri: item.uri,
+              web_url: item.url,
               pub_date: item.published_date,
               headline: {
                 main: item.title,

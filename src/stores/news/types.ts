@@ -13,6 +13,7 @@ export interface NewsState {
 
 export enum NewsActionTypes {
   FETCH = 'news/fetch',
+  FETCH_MOSTPOPULAR = 'news/mostPopular',
   FETCH_LOADING = 'news/fetchLoading',
   FETCH_SUCCESS = 'news/fetchSuccess',
   FETCH_MORE = 'news/fetchMore',

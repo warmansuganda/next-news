@@ -1,6 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit';
 
-import { fetchNews, fetchNewsLoading, fetchNewsSucess } from './actions';
+import {
+  fetchNews,
+  fetchNewsLoading,
+  fetchNewsSucess,
+  fetchMostPopularNews,
+} from './actions';
 import { NewsState } from './types';
 
 const initialState: NewsState = {
@@ -8,13 +13,17 @@ const initialState: NewsState = {
   data: {
     loading: true,
     items: [],
-    nextPage: false,
+    nextPage: true,
   },
 };
 
 export const newsReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(fetchNews, (state, action) => ({
+      ...state,
+      search: action.payload.query,
+    }))
+    .addCase(fetchMostPopularNews, (state, action) => ({
       ...state,
       search: action.payload.query,
     }))

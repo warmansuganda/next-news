@@ -1,3 +1,4 @@
+export type MostPopularCategory = 'emailed' | 'shared' | 'viewed';
 export interface Author {
   firstname: string;
   middlename: string;
@@ -10,12 +11,22 @@ export interface News {
   headline: {
     main: string;
   };
-  news_desk: string;
+  section_name: string;
   byline: {
-    person: Author[];
+    original: string;
   };
   multimedia: Array<{
     subtype: string;
     url: string;
   }>;
+}
+
+export interface MostPopularNews {
+  uri: string;
+  published_date: Date;
+  title: string;
+  abstract: string;
+  section: string;
+  byline: string;
+  media: Array<{ 'media-metadata': Array<{ format: string; url: string }> }>;
 }

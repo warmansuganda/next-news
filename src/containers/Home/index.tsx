@@ -17,8 +17,9 @@ import NewsCard from 'src/features/NewsCard';
 import Empty from '@components/Empty';
 
 import { useAppSelector, useAppDispatch } from '@hooks/index';
-import { fetchNews, fetchMoreNews } from '@stores/news';
+import { fetchNews, fetchMoreNews, fetchMostPopularNews } from '@stores/news';
 import { ARTICLE_DETAIL } from '@constants/path';
+import { QueryParams } from '@services/types';
 
 import { ToolBox, SearchBox, ListWrapper, FilterBox } from './styles';
 import filters from './filters.json';
@@ -40,18 +41,33 @@ function Home({ defaultQuery, defaultFilter }: HomePorps) {
   const [query, setQuery] = useState(defaultQuery);
   const [filter, setFilter] = useState(defaultFilter);
 
+  const fetch = (category: string, options: QueryParams) => {
+    if (category !== 'all') {
+      dispatch(
+        fetchMostPopularNews({
+          filter: category.replaceAll('most-', ''),
+          period: 30,
+          ...options,
+        })
+      );
+    } else dispatch(fetchNews(options));
+  };
+
   useEffect(() => {
-    dispatch(fetchNews({ query: defaultQuery, page }));
+    fetch(defaultFilter !== 'all' ? defaultFilter : 'all', {
+      query: defaultQuery,
+      page,
+    });
   }, []);
 
   const handleLoadMore = useDebouncedCallback(
     useCallback(() => {
-      if (!data.loading) {
+      if (!data.loading && data.nextPage && filter === 'all') {
         const newPage = page + 1;
         dispatch(fetchMoreNews({ query: defaultQuery, page: newPage }));
         setPage(newPage);
       }
-    }, [page, data.loading]),
+    }, [page, filter, data.loading, data.nextPage]),
     500
   );
 
@@ -70,30 +86,41 @@ function Home({ defaultQuery, defaultFilter }: HomePorps) {
     };
   }, []);
 
-  const handleChange = useCallback((keyword: string) => {
-    setPage(1);
-    setQuery(keyword);
-    dispatch(fetchNews({ query: keyword, page: 1 }));
+  const handleChange = useCallback(
+    (keyword: string) => {
+      setPage(1);
+      setQuery(keyword);
+      fetch(filter, { query: keyword, page: 1 });
 
-    router.push({
-      query: {
-        ...(keyword ? { query: keyword } : {}),
-      },
-    });
-  }, []);
+      router.push({
+        query: {
+          ...(keyword ? { query: keyword } : {}),
+          ...(filter && filter !== 'all' ? { filter } : {}),
+        },
+      });
+    },
+    [filter]
+  );
 
-  const handleFilter = useCallback((keyword: string) => {
-    setPage(1);
-    setFilter(keyword);
-    // if (keyword) dispatch(fetchNews({ query: keyword }));
-    // else dispatch(resetUserData());
+  const handleFilter = useCallback(
+    (keyword: string) => {
+      if (keyword !== filter) {
+        setPage(1);
+        setFilter(keyword);
 
-    // router.push({
-    //   query: {
-    //     ...(keyword ? { query: keyword } : {}),
-    //   },
-    // });
-  }, []);
+        if (keyword && keyword !== 'all') fetch(keyword, { query });
+        else fetch('all', { query, page: 1 });
+
+        router.push({
+          query: {
+            ...(query ? { query } : {}),
+            ...(keyword && keyword !== 'all' ? { filter: keyword } : {}),
+          },
+        });
+      }
+    },
+    [query, filter]
+  );
 
   const debounced = useDebouncedCallback(handleChange, 500);
 
@@ -121,7 +148,7 @@ function Home({ defaultQuery, defaultFilter }: HomePorps) {
             news.search ? t('No search result found for') : t('No result found')
           }
         >
-          <Typography variant="subtitle2">{news.search}</Typography>
+          <Typography variant="subtitle2">{`"${news.search}"`}</Typography>
         </Empty>
       );
     }

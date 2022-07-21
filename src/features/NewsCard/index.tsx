@@ -30,11 +30,16 @@ function NewsCard({ data }: NewsCardProps) {
 
   const media = useMemo(() => {
     const image = data.multimedia.find(
-      (item) => item.subtype === 'largeWidescreen573'
+      (item) => item.subtype === 'mediumThreeByTwo440'
     );
-    return image
-      ? [config.CDN_URL, image.url].join('/')
-      : '/static/default-image.png';
+
+    if (image?.url) {
+      return image.url.includes(config.CDN_URL)
+        ? image.url
+        : [config.CDN_URL, image.url].join('/');
+    }
+
+    return '/static/default-image.png';
   }, [data.multimedia]);
 
   const dateDiff = useMemo(
@@ -56,11 +61,11 @@ function NewsCard({ data }: NewsCardProps) {
       </CardContent>
       <CardActions>
         <CardSection>
-          <div>{data.news_desk}</div>
+          <div>{data.section_name}</div>
           <div>{dateDiff}</div>
         </CardSection>
         <PurchaseButton>
-          {price ? numeral(price).format('$ 0,0') : t('FREE')} | {t('Purchase')}
+          {price ? numeral(price).format('$ 0,0') : t('Free')} | {t('Purchase')}
         </PurchaseButton>
       </CardActions>
     </Card>

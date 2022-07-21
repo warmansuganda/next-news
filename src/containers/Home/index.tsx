@@ -17,7 +17,7 @@ import NewsCard from 'src/features/NewsCard';
 import Empty from '@components/Empty';
 
 import { useAppSelector, useAppDispatch } from '@hooks/index';
-import { fetchNews } from '@stores/news';
+import { fetchNews, fetchMoreNews } from '@stores/news';
 import { ARTICLE_DETAIL } from '@constants/path';
 
 import { ToolBox, SearchBox, ListWrapper, FilterBox } from './styles';
@@ -37,24 +37,43 @@ function Home({ defaultQuery, defaultFilter }: HomePorps) {
   const data = useMemo(() => news.data, [news.data]);
 
   const [page, setPage] = useState(1);
-  const [showDrawer, setShowDrawer] = useState(false);
   const [query, setQuery] = useState(defaultQuery);
   const [filter, setFilter] = useState(defaultFilter);
 
-  const container =
-    typeof window !== 'undefined'
-      ? () => window.document.getElementById('ahay')
-      : undefined;
+  useEffect(() => {
+    dispatch(fetchNews({ query: defaultQuery, page }));
+  }, []);
+
+  const handleLoadMore = useDebouncedCallback(
+    useCallback(() => {
+      if (!data.loading) {
+        const newPage = page + 1;
+        dispatch(fetchMoreNews({ query: defaultQuery, page: newPage }));
+        setPage(newPage);
+      }
+    }, [page, data.loading]),
+    500
+  );
 
   useEffect(() => {
-    dispatch(fetchNews({ query: defaultQuery }));
+    window.document.body.onscroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop ===
+        document.documentElement.offsetHeight
+      ) {
+        handleLoadMore();
+      }
+    };
+
+    return () => {
+      window.document.body.onscroll = null;
+    };
   }, []);
 
   const handleChange = useCallback((keyword: string) => {
     setPage(1);
     setQuery(keyword);
-    if (keyword) dispatch(fetchNews({ query: keyword }));
-    // else dispatch(resetUserData());
+    dispatch(fetchNews({ query: keyword, page: 1 }));
 
     router.push({
       query: {
@@ -77,6 +96,38 @@ function Home({ defaultQuery, defaultFilter }: HomePorps) {
   }, []);
 
   const debounced = useDebouncedCallback(handleChange, 500);
+
+  const renderList = () => {
+    if (data.items.length > 0) {
+      return data.items.map((item) => (
+        <Link
+          key={item.uri}
+          href={{
+            pathname: ARTICLE_DETAIL,
+            query: { username: item.uri },
+          }}
+        >
+          <a style={{ textDecoration: 'none', color: 'inherit' }}>
+            <NewsCard data={item} />
+          </a>
+        </Link>
+      ));
+    }
+
+    if (!data.loading && !data.items.length) {
+      return (
+        <Empty
+          message={
+            news.search ? t('No search result found for') : t('No result found')
+          }
+        >
+          <Typography variant="subtitle2">{news.search}</Typography>
+        </Empty>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <DefaultLayout>
@@ -105,31 +156,13 @@ function Home({ defaultQuery, defaultFilter }: HomePorps) {
           ))}
         </FilterBox>
       </ToolBox>
-      {data.items.length ? (
-        <ListWrapper spacing={2}>
-          {data.items.map((item) => (
-            <Link
-              key={item.uri}
-              href={{
-                pathname: ARTICLE_DETAIL,
-                query: { username: item.uri },
-              }}
-            >
-              <a style={{ textDecoration: 'none', color: 'inherit' }}>
-                <NewsCard data={item} />
-              </a>
-            </Link>
-          ))}
-        </ListWrapper>
-      ) : (
-        <Empty
-          message={
-            news.search ? t('No search result found for') : t('No result found')
-          }
-        >
-          <Typography variant="subtitle2">{news.search}</Typography>
-        </Empty>
-      )}
+      <ListWrapper spacing={2}>
+        {renderList()}
+        {data.loading &&
+          Array(2)
+            .fill(null)
+            .map((_, index) => <NewsCard.Placeholder key={index} />)}
+      </ListWrapper>
     </DefaultLayout>
   );
 }

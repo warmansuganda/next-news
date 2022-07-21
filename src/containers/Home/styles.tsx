@@ -30,6 +30,7 @@ export const FilterBox = styled(Stack)(() => ({
 }));
 
 export const ListWrapper = styled(Stack)(() => ({
+  flex: 1,
   margin: '0 -16px',
   '> :not(:last-child) ': {
     borderBottom: `1px solid ${grey[200]}`,

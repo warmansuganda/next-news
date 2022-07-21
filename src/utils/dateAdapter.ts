@@ -1,4 +1,5 @@
 import DateAdapter from '@date-io/date-fns';
+import i18n from '@locales/i18n';
 
 const adapter = new DateAdapter();
 
@@ -17,7 +18,7 @@ function datePublished(date: Date) {
     if (minutes) return `${minutes}m`;
   }
 
-  return '-';
+  return i18n.t('Just now');
 }
 
 export default {

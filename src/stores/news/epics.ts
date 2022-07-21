@@ -6,10 +6,10 @@ import { AnyAction } from '@reduxjs/toolkit';
 import { fetchNews } from '@services/news';
 import { ErrorResponse } from '@services/types';
 
-import { loadingStart, loadingEnd, createAlert } from '@stores/app';
+import { createAlert } from '@stores/app';
 
 import { NewsActionTypes } from './types';
-import { fetchNewsSucess } from './actions';
+import { fetchNewsSucess, fetchNewsLoading } from './actions';
 
 const fetchNewsEpic: Epic<AnyAction, AnyAction> = (action$) =>
   action$.pipe(
@@ -18,23 +18,54 @@ const fetchNewsEpic: Epic<AnyAction, AnyAction> = (action$) =>
       from(fetchNews(action.payload.query, action.payload.page)).pipe(
         map(({ data }) =>
           fetchNewsSucess({
+            loading: false,
             items: data.response.docs,
             nextPage: data.response.docs.length > 0,
           })
         ),
         catchError((error: ErrorResponse) => {
           return of(
-            loadingEnd(),
+            fetchNewsLoading(false),
             createAlert({
               severity: 'error',
               message: error.response?.data.message,
             })
           );
         }),
-        startWith(loadingStart()),
-        endWith(loadingEnd())
+        startWith(fetchNewsLoading(true))
       )
     )
   );
 
-export const newsEpic = combineEpics(fetchNewsEpic);
+const fetchMoreNewsEpic: Epic<AnyAction, AnyAction> = (action$, state$) =>
+  action$.pipe(
+    ofType(NewsActionTypes.FETCH_MORE),
+    switchMap((action) =>
+      from(fetchNews(action.payload.query, action.payload.page)).pipe(
+        map(({ data }) => {
+          const items = [
+            ...state$.value.news.data.items,
+            ...data.response.docs,
+          ];
+
+          return fetchNewsSucess({
+            loading: false,
+            items,
+            nextPage: data.response.docs.length > 0,
+          });
+        }),
+        catchError((error: ErrorResponse) => {
+          return of(
+            fetchNewsLoading(false),
+            createAlert({
+              severity: 'error',
+              message: error.response?.data.message,
+            })
+          );
+        }),
+        startWith(fetchNewsLoading(true))
+      )
+    )
+  );
+
+export const newsEpic = combineEpics(fetchNewsEpic, fetchMoreNewsEpic);

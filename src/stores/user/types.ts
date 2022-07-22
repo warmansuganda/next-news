@@ -28,4 +28,5 @@ export interface UserState {
 export enum UserActionTypes {
   SEARCH = 'user/search',
   UPDATE_LIBARY = 'user/updateLibrary',
+  UPDATE_LIBARY_SUCCCESS = 'user/updateLibrarySuccess',
 }

@@ -1,3 +1,3 @@
-import Account from '@containers/Account';
+import Library from '@containers/Library';
 
-export default Account;
+export default Library;

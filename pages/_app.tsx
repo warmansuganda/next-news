@@ -10,6 +10,7 @@ import { CacheProvider, EmotionCache } from '@emotion/react';
 
 import { wrapper } from '@stores/index';
 import { changeTheme, ThemeType, loadingStart, loadingEnd } from '@stores/app';
+import { Library, updateLibrary } from '@stores/user';
 
 import { useAppSelector, useAppDispatch } from '@hooks/index';
 
@@ -66,8 +67,15 @@ function MyApp({
 
   useEffect(() => {
     const defaultTheme = localStorage.getItem('app:theme');
+    const defaultLibrary = localStorage.getItem('app:library');
 
     dispatch(changeTheme((defaultTheme || 'light') as ThemeType));
+
+    dispatch(
+      updateLibrary(
+        (defaultLibrary ? JSON.parse(defaultLibrary) : []) as Library[]
+      )
+    );
   }, []);
 
   return (

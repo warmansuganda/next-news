@@ -75,8 +75,8 @@ function Home({ defaultQuery, defaultFilter }: HomePorps) {
   useEffect(() => {
     window.document.body.onscroll = () => {
       if (
-        window.innerHeight + document.documentElement.scrollTop ===
-        document.documentElement.offsetHeight
+        Math.ceil(window.innerHeight + document.documentElement.scrollTop) ===
+        Math.ceil(document.documentElement.offsetHeight)
       ) {
         handleLoadMore();
       }

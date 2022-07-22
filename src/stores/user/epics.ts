@@ -1,15 +1,17 @@
-import { combineEpics } from 'redux-observable';
-// import { ofType, Epic, combineEpics } from 'redux-observable';
-// import { from, of } from 'rxjs';
-// import { map, switchMap, startWith, endWith, catchError } from 'rxjs/operators';
+import { AnyAction } from '@reduxjs/toolkit';
+import { ofType, Epic, combineEpics } from 'redux-observable';
+import { map, tap } from 'rxjs/operators';
 
-// import { AnyAction } from '@reduxjs/toolkit';
-// import { fetchUsers } from '@services/users';
-// import { ErrorResponse } from '@services/types';
+import { UserActionTypes } from './types';
+import { updateLibrarySuccess } from './actions';
 
-// import { loadingStart, loadingEnd, createAlert } from '@stores/app';
+const updateLibraryEpic: Epic<AnyAction, AnyAction> = (action$) =>
+  action$.pipe(
+    ofType(UserActionTypes.UPDATE_LIBARY),
+    tap(({ payload }) => {
+      localStorage.setItem('app:library', JSON.stringify(payload));
+    }),
+    map(() => updateLibrarySuccess())
+  );
 
-// import { UserActionTypes } from './types';
-// import { searchUserSucess } from './actions';
-
-export const userEpic = combineEpics();
+export const userEpic = combineEpics(updateLibraryEpic);

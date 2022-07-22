@@ -8,3 +8,7 @@ export const searchUser = createAction<QueryParams>(UserActionTypes.SEARCH);
 export const updateLibrary = createAction<Library[]>(
   UserActionTypes.UPDATE_LIBARY
 );
+
+export const updateLibrarySuccess = createAction(
+  UserActionTypes.UPDATE_LIBARY_SUCCCESS
+);

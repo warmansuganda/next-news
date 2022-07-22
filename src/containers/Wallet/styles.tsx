@@ -36,3 +36,9 @@ export const ListWrapper = styled(List)(({ theme }) => ({
   flexDirection: 'column',
   background: theme.palette.background.paper,
 }));
+
+export const ListItemText = styled(Box)(() => ({
+  flex: 1,
+  paddingRight: '30px',
+  overflow: 'hidden',
+}));

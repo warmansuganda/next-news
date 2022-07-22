@@ -8,7 +8,6 @@ import numeral from 'numeral';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
 import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
@@ -23,7 +22,13 @@ import { useAppSelector } from '@hooks/index';
 import { WalletLog } from '@stores/user';
 import dateAdapter from '@utils/dateAdapter';
 
-import { ToolBox, SearchBox, ListWrapper, FilterBox } from './styles';
+import {
+  ToolBox,
+  SearchBox,
+  ListWrapper,
+  FilterBox,
+  ListItemText,
+} from './styles';
 import filters from './filters.json';
 
 interface LibraryPorps {
@@ -149,10 +154,17 @@ function Library({ defaultQuery, defaultFilter }: LibraryPorps) {
               )}
             </Avatar>
           </ListItemAvatar>
-          <ListItemText
-            primary={item.note}
-            secondary={dateAdapter.format(item.date, 'fullDateTime')}
-          />
+          <ListItemText>
+            <Typography component="div" variant="body2" noWrap>
+              {item.note}
+            </Typography>
+            <Typography component="div" variant="caption" color="GrayText">
+              {dateAdapter.format(
+                typeof item.date === 'string' ? new Date(item.date) : item.date,
+                'fullDateTime'
+              )}
+            </Typography>
+          </ListItemText>
         </ListItem>
       ));
     }

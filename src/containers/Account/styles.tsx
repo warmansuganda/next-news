@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box';
+import Badge from '@mui/material/Badge';
 import { grey } from '@mui/material/colors';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
@@ -77,3 +78,12 @@ export const LinkDetail = styled(Link)(() => ({
 LinkDetail.defaultProps = {
   underline: 'none',
 };
+
+export const StyledBadge = styled(Badge)(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    right: -18,
+    top: 16,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: '0 4px',
+  },
+}));

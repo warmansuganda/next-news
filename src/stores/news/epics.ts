@@ -9,7 +9,13 @@ import { ErrorResponse } from '@services/types';
 
 import { createAlert } from '@stores/app';
 import i18n from '@locales/i18n';
-import { Library, addLibrary, walletTransaction } from '@stores/user';
+import {
+  Library,
+  addLibrary,
+  walletTransaction,
+  skipCoupon,
+  addCoupon,
+} from '@stores/user';
 import getPrice from '@utils/getPrice';
 
 import { NewsActionTypes } from './types';
@@ -187,11 +193,21 @@ const purchaseNewsEpic: Epic<AnyAction, AnyAction> = (action$, state$) =>
         );
       }
 
+      // init coupon
+      const createCoupon = price >= 50000;
+
       return of(
         addLibrary({
           price,
           news: payload.news,
         }),
+        createCoupon
+          ? addCoupon(
+              i18n.t('From purchase {{news}}', {
+                news: payload.news.headline.main,
+              })
+            )
+          : skipCoupon(),
         walletTransaction({
           type: 'expense',
           amount: price,

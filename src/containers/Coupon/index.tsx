@@ -1,14 +1,15 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import type { NextPageContext } from 'next';
 import { useTranslation } from 'react-i18next';
 
-// import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-// import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-// import FilterListIcon from '@mui/icons-material/FilterList';
+import Chip from '@mui/material/Chip';
+import Avatar from '@mui/material/Avatar';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import VerifiedIcon from '@mui/icons-material/Verified';
 
 import DefaultLayout from '@layouts/DefaultLayout';
 import Input from '@components/Input';
@@ -16,20 +17,26 @@ import NewsCard from 'src/features/NewsCard';
 import Empty from '@components/Empty';
 
 import { useAppSelector } from '@hooks/index';
-import { Library as LibaryType } from '@stores/user';
+import { Coupon } from '@stores/user';
+import dateAdapter from '@utils/dateAdapter';
 
-import { ARTICLE_DETAIL } from '@constants/path';
-import { base64Ecode } from '@utils/base64';
+import {
+  ToolBox,
+  SearchBox,
+  ListWrapper,
+  FilterBox,
+  ListItemText,
+} from './styles';
+import filters from './filters.json';
 
-import { ToolBox, SearchBox, ListWrapper } from './styles';
-
-interface CouponPorps {
+interface LibraryPorps {
   defaultQuery: string;
+  defaultFilter: string;
 }
 
 const PAGE_SIZE = 3;
 
-function Coupon({ defaultQuery }: CouponPorps) {
+function Library({ defaultQuery, defaultFilter }: LibraryPorps) {
   const { user } = useAppSelector((state) => state);
   const router = useRouter();
   const { t } = useTranslation();
@@ -37,39 +44,46 @@ function Coupon({ defaultQuery }: CouponPorps) {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState(defaultQuery);
-  const [library, setCoupon] = useState<LibaryType[]>([]);
+  const [filter, setFilter] = useState(defaultFilter);
+  const [coupon, setCoupon] = useState<Coupon[]>([]);
 
   const data = useMemo(() => {
-    const result = [...library];
+    const result = [...coupon];
     return result
       .filter((item) => {
+        let queryStatus = true;
+        let filterStatus = true;
+
         if (query) {
-          return (
-            item.news.headline.main
-              .toLowerCase()
-              .includes(query.toLowerCase()) ||
-            item.news.abstract.toLowerCase().includes(query.toLowerCase())
-          );
+          queryStatus = item.note.toLowerCase().includes(query.toLowerCase());
         }
 
-        return true;
+        if (filter && filter !== 'all') {
+          if (filter === 'new') {
+            filterStatus = item.chance > 0;
+          } else if (filter === 'claimed') {
+            filterStatus = item.chance === 0;
+          }
+        }
+
+        return queryStatus && filterStatus;
       })
       .slice(0, page * PAGE_SIZE);
-  }, [library, query, page]);
+  }, [coupon, query, page, filter]);
 
   useEffect(() => {
-    setCoupon(user.library);
+    setCoupon(user.coupon);
     setLoading(false);
-  }, [user.library]);
+  }, [user.coupon]);
 
   const handleLoadMore = useDebouncedCallback(
     useCallback(() => {
-      const maxPage = Math.ceil(library.length / PAGE_SIZE);
+      const maxPage = Math.ceil(coupon.length / PAGE_SIZE);
       const newPage = page + 1;
       if (newPage <= maxPage) {
         setPage(newPage);
       }
-    }, [page, library]),
+    }, [page, coupon]),
     500
   );
 
@@ -100,22 +114,54 @@ function Coupon({ defaultQuery }: CouponPorps) {
 
   const debounced = useDebouncedCallback(handleChange, 500);
 
+  const handleFilter = useCallback(
+    (keyword: string) => {
+      if (keyword !== filter) {
+        setPage(1);
+        setFilter(keyword);
+
+        router.push({
+          query: {
+            ...(query ? { query } : {}),
+            ...(keyword && keyword !== 'all' ? { filter: keyword } : {}),
+          },
+        });
+      }
+    },
+    [query, filter]
+  );
+
   const renderList = () => {
     if (data.length > 0) {
       return data.map((item) => (
-        <Link
-          key={item.news.uri}
-          href={{
-            pathname: ARTICLE_DETAIL,
-            query: {
-              id: base64Ecode(item.news.web_url),
-            },
-          }}
-        >
-          <a style={{ textDecoration: 'none', color: 'inherit' }}>
-            <NewsCard data={item.news} />
-          </a>
-        </Link>
+        <ListItem key={item.id}>
+          <ListItemAvatar>
+            <VerifiedIcon
+              color={item.chance === 0 ? 'disabled' : 'success'}
+              sx={{ fontSize: 35 }}
+            />
+          </ListItemAvatar>
+          <ListItemText>
+            <Typography component="div" variant="body2" noWrap>
+              {item.note}
+            </Typography>
+            <Typography component="div" variant="caption" color="GrayText">
+              {dateAdapter.format(
+                typeof item.date === 'string' ? new Date(item.date) : item.date,
+                'fullDateTime'
+              )}
+            </Typography>
+            <Chip
+              avatar={<Avatar>{item.chance}</Avatar>}
+              label={t('Redeem')}
+              size="small"
+              color="success"
+              variant="outlined"
+              clickable
+              disabled={item.chance === 0}
+            />
+          </ListItemText>
+        </ListItem>
       ));
     }
 
@@ -139,13 +185,26 @@ function Coupon({ defaultQuery }: CouponPorps) {
       <ToolBox>
         <SearchBox>
           <Input
-            placeholder={t('Search news, i.e. election')}
+            placeholder={t('Search coupon')}
             defaultValue={query}
             onChange={(e) => debounced(e.target.value)}
           />
         </SearchBox>
+        <FilterBox direction="row" spacing={1}>
+          {filters.map((item) => (
+            <Chip
+              component="a"
+              key={item.key}
+              label={t(item.label)}
+              color="primary"
+              variant={filter === item.key ? 'filled' : 'outlined'}
+              onClick={() => handleFilter(item.key)}
+              clickable
+            />
+          ))}
+        </FilterBox>
       </ToolBox>
-      <ListWrapper spacing={2}>
+      <ListWrapper>
         {renderList()}
         {loading &&
           Array(2)
@@ -156,8 +215,9 @@ function Coupon({ defaultQuery }: CouponPorps) {
   );
 }
 
-Coupon.getInitialProps = ({ query }: NextPageContext) => ({
+Library.getInitialProps = ({ query }: NextPageContext) => ({
   defaultQuery: query.query,
+  defaultFilter: query.filter || 'all',
 });
 
-export default Coupon;
+export default Library;

@@ -1,6 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit';
 
-import { searchUser, updateLibrary, updateWallet } from './actions';
+import {
+  searchUser,
+  updateCoupon,
+  updateLibrary,
+  updateWallet,
+} from './actions';
 import { UserState } from './types';
 
 const initialState: UserState = {
@@ -10,6 +15,8 @@ const initialState: UserState = {
     logs: [],
   },
   library: [],
+  coupon: [],
+  redeem: [],
 };
 
 export const userReducer = createReducer(initialState, (builder) => {
@@ -25,5 +32,9 @@ export const userReducer = createReducer(initialState, (builder) => {
     .addCase(updateWallet, (state, action) => ({
       ...state,
       wallet: action.payload,
+    }))
+    .addCase(updateCoupon, (state, action) => ({
+      ...state,
+      coupon: action.payload,
     }));
 });

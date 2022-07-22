@@ -7,6 +7,7 @@ import {
   WalletTransaction,
   Wallet,
   AddLibrary,
+  Coupon,
 } from './types';
 
 export const searchUser = createAction<QueryParams>(UserActionTypes.SEARCH);
@@ -34,3 +35,15 @@ export const updateWalletSuccess = createAction(
 export const updateWalletSkip = createAction(
   UserActionTypes.UPDATE_WALLET_SKIP
 );
+
+export const addCoupon = createAction<string>(UserActionTypes.ADD_COUPON);
+
+export const updateCoupon = createAction<Coupon[]>(
+  UserActionTypes.UPDATE_COUPON
+);
+
+export const updateCouponSuccess = createAction(
+  UserActionTypes.UPDATE_COUPON_SUCCCESS
+);
+
+export const skipCoupon = createAction(UserActionTypes.SKIP_COUPON);

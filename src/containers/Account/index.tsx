@@ -38,6 +38,7 @@ import {
   CouponCard,
   CouponCaption,
   LinkDetail,
+  StyledBadge,
 } from './styles';
 
 function Account() {
@@ -103,6 +104,14 @@ function Account() {
       free,
     };
   }, [user.wallet]);
+
+  const coupon = useMemo(
+    () => ({
+      total: user.coupon.length,
+      new: user.coupon.filter((item) => !item.hasClaimed).length,
+    }),
+    [user.coupon]
+  );
 
   return (
     <PlainLayout
@@ -206,7 +215,9 @@ function Account() {
         <CouponCard>
           <VerifiedIcon color="success" sx={{ fontSize: 35 }} />
           <CouponCaption>
-            <Typography variant="h6">{t('Coupon')}</Typography>
+            <StyledBadge badgeContent={coupon.new} color="primary">
+              <Typography variant="h6">{t('Coupon')}</Typography>
+            </StyledBadge>
             <Typography variant="body2" color="GrayText">
               {t('Redeem your coupon, and get the prize')}
             </Typography>

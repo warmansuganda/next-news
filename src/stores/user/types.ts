@@ -7,13 +7,13 @@ export interface WalletTransaction {
 }
 
 export interface WalletLog extends WalletTransaction {
-  id: number;
+  id: string;
   date: Date;
-  isRead: boolean;
+  hasRead: boolean;
 }
 
 export interface Library {
-  id: number;
+  id: string;
   price: number;
   date: Date;
   news: News;
@@ -29,10 +29,26 @@ export interface Wallet {
   logs: WalletLog[];
 }
 
+export interface Coupon {
+  id: string;
+  date: Date;
+  note: string;
+  chance: number;
+}
+
+export interface Redeem {
+  id: string;
+  date: Date;
+  coupon: string;
+  coin: number;
+}
+
 export interface UserState {
   search: string;
   wallet: Wallet;
   library: Library[];
+  coupon: Coupon[];
+  redeem: Redeem[];
 }
 
 export enum UserActionTypes {
@@ -44,4 +60,8 @@ export enum UserActionTypes {
   UPDATE_WALLET = 'user/updateWallet',
   UPDATE_WALLET_SUCCESS = 'user/updateWalletSuccess',
   UPDATE_WALLET_SKIP = 'user/updateWalletSkip',
+  ADD_COUPON = 'user/addCoupon',
+  SKIP_COUPON = 'user/skipCoupon',
+  UPDATE_COUPON = 'user/updateCoupon',
+  UPDATE_COUPON_SUCCCESS = 'user/updateCouponSuccess',
 }

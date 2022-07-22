@@ -151,6 +151,7 @@ function ArticleDetail({ data }: ArticleDetailProps) {
               sx={{
                 flex: 1,
                 padding: '16px',
+                borderRadius: 0,
               }}
               elevation={3}
             >

@@ -18,10 +18,12 @@ export const SearchBox = styled(Box)(() => ({
   gap: '8px',
 }));
 
-export const ListWrapper = styled(Stack)(() => ({
+export const ListWrapper = styled(Stack)(({ theme }) => ({
   flex: 1,
   margin: '0 -16px',
   '> :not(:last-child) ': {
-    borderBottom: `1px solid ${grey[200]}`,
+    borderBottom: `1px solid ${
+      theme.palette.mode === 'dark' ? grey[900] : grey[200]
+    }`,
   },
 }));

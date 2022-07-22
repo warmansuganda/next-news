@@ -3,6 +3,7 @@ import { grey } from '@mui/material/colors';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
+import Link from '@mui/material/Link';
 
 export const ProfileContact = styled(Box)(() => ({
   marginTop: 2,
@@ -17,9 +18,9 @@ export const ProfileCard = styled(Box)(() => ({
   alignItems: 'center',
 }));
 
-export const Content = styled(Box)(() => ({
+export const Content = styled(Box)(({ theme }) => ({
   flex: 1,
-  background: grey[100],
+  background: theme.palette.mode === 'dark' ? 'none' : grey[100],
   margin: '0 -16px -16px -16px',
   padding: '16px 20px',
 }));
@@ -47,9 +48,9 @@ export const ItemCard = styled(Box)(() => ({
   textAlign: 'center',
 }));
 
-export const ResetButton = styled(Button)(() => ({
+export const ResetButton = styled(Button)(({ theme }) => ({
   borderRadius: '50px',
-  background: 'white',
+  background: theme.palette.mode === 'dark' ? 'none' : 'white',
 }));
 
 ResetButton.defaultProps = {
@@ -67,3 +68,12 @@ export const CouponCard = styled(Paper)(() => ({
 export const CouponCaption = styled(Box)(() => ({
   flex: 1,
 }));
+
+export const LinkDetail = styled(Link)(() => ({
+  display: 'flex',
+  alignItems: 'center',
+}));
+
+LinkDetail.defaultProps = {
+  underline: 'none',
+};

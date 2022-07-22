@@ -2,6 +2,7 @@ import { ChangeEvent, useMemo, useState } from 'react';
 import PlainLayout from '@layouts/PlainLayout';
 import { useTranslation } from 'react-i18next';
 import numeral from 'numeral';
+import Link from 'next/link';
 
 import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
@@ -10,6 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
+
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -23,6 +25,7 @@ import VerifiedIcon from '@mui/icons-material/Verified';
 
 import { useAppSelector, useAppDispatch } from '@hooks/index';
 import { changeTheme, ThemeType } from '@stores/app';
+import { WALLET, LIBRARY } from '@constants/path';
 
 import {
   ProfileCard,
@@ -34,6 +37,7 @@ import {
   ResetButton,
   CouponCard,
   CouponCaption,
+  LinkDetail,
 } from './styles';
 
 function Account() {
@@ -122,7 +126,11 @@ function Account() {
       <Content>
         <SectionTitle>
           <Typography variant="h6">{t('Wallet')}</Typography>
-          <div>{t('View Transaction')}</div>
+          <Link href={WALLET} passHref>
+            <LinkDetail>
+              {t('View Transaction')} <ChevronRightIcon />
+            </LinkDetail>
+          </Link>
         </SectionTitle>
         <SectionCard>
           <ItemCard>
@@ -162,7 +170,11 @@ function Account() {
 
         <SectionTitle>
           <Typography variant="h6">{t('Subscription')}</Typography>
-          <div>{t('View Library')}</div>
+          <Link href={LIBRARY} passHref>
+            <LinkDetail>
+              {t('View Library')} <ChevronRightIcon />
+            </LinkDetail>
+          </Link>
         </SectionTitle>
         <SectionCard>
           <ItemCard>

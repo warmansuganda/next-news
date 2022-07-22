@@ -1,7 +1,8 @@
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import { grey } from '@mui/material/colors';
+import Link from '@mui/material/Link';
 
+import { grey } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
 
 export const ToolBox = styled(Box)(({ theme }) => ({
@@ -29,10 +30,20 @@ export const FilterBox = styled(Stack)(() => ({
   },
 }));
 
-export const ListWrapper = styled(Stack)(() => ({
+export const ListWrapper = styled(Stack)(({ theme }) => ({
   flex: 1,
   margin: '0 -16px',
   '> :not(:last-child) ': {
-    borderBottom: `1px solid ${grey[200]}`,
+    borderBottom: `1px solid ${
+      theme.palette.mode === 'dark' ? grey[900] : grey[200]
+    }`,
   },
 }));
+
+export const LinkDetail = styled(Link)(() => ({
+  color: 'inherit',
+}));
+
+LinkDetail.defaultProps = {
+  underline: 'none',
+};

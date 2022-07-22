@@ -37,14 +37,16 @@ export const ArticleAuthor = styled(Box)(() => ({
   fontSize: 12,
 }));
 
-export const ArticleWraper = styled(Container)(() => ({
+export const ArticleWraper = styled(Container)(({ theme }) => ({
   height: 'calc(50vh)',
   position: 'fixed',
   bottom: 0,
   left: 0,
   right: 0,
   background:
-    'linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 30%, rgba(255,255,255,1) 100%)',
+    theme.palette.mode === 'dark'
+      ? 'linear-gradient(180deg, rgba(18,18,18,0) 0%, rgba(18,18,18,1) 30%, rgba(18,18,18,1) 100%)'
+      : 'linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 30%, rgba(255,255,255,1) 100%)',
 }));
 
 export const ArticleFooter = styled(Container)(() => ({

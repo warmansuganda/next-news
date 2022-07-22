@@ -5,11 +5,8 @@ import { useRouter } from 'next/router';
 import type { NextPageContext } from 'next';
 import { useTranslation } from 'react-i18next';
 
-// import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
-// import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-// import FilterListIcon from '@mui/icons-material/FilterList';
 
 import DefaultLayout from '@layouts/DefaultLayout';
 import Input from '@components/Input';
@@ -22,7 +19,13 @@ import { ARTICLE_DETAIL } from '@constants/path';
 import { QueryParams } from '@services/types';
 import { base64Ecode } from '@utils/base64';
 
-import { ToolBox, SearchBox, ListWrapper, FilterBox } from './styles';
+import {
+  ToolBox,
+  SearchBox,
+  ListWrapper,
+  FilterBox,
+  LinkDetail,
+} from './styles';
 import filters from './filters.json';
 
 interface HomePorps {
@@ -136,10 +139,11 @@ function Home({ defaultQuery, defaultFilter }: HomePorps) {
               id: base64Ecode(item.web_url),
             },
           }}
+          passHref
         >
-          <a style={{ textDecoration: 'none', color: 'inherit' }}>
+          <LinkDetail>
             <NewsCard data={item} />
-          </a>
+          </LinkDetail>
         </Link>
       ));
     }
@@ -170,9 +174,6 @@ function Home({ defaultQuery, defaultFilter }: HomePorps) {
             defaultValue={query}
             onChange={(e) => debounced(e.target.value)}
           />
-          {/* <IconButton onClick={() => setShowDrawer(true)}>
-            <FilterListIcon />
-          </IconButton> */}
         </SearchBox>
         <FilterBox direction="row" spacing={1}>
           {filters.map((item) => (

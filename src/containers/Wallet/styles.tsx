@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import { grey } from '@mui/material/colors';
+import List from '@mui/material/List';
 
 import { styled } from '@mui/material/styles';
 
@@ -9,7 +9,7 @@ export const ToolBox = styled(Box)(({ theme }) => ({
   top: '72px',
   zIndex: 5,
   margin: '0 -16px',
-  padding: '16px',
+  padding: '16px 16px 8px 16px',
   background: theme.palette.background.paper,
 }));
 
@@ -23,17 +23,16 @@ export const FilterBox = styled(Stack)(() => ({
   overflowX: 'auto',
   scrollbarWidth: 'none',
   msOverflowStyle: 'none',
+  marginBottom: '16px',
   '::-webkit-scrollbar': {
     display: 'none',
   },
 }));
 
-export const ListWrapper = styled(Stack)(({ theme }) => ({
+export const ListWrapper = styled(List)(({ theme }) => ({
   flex: 1,
   margin: '0 -16px',
-  '> :not(:last-child) ': {
-    borderBottom: `1px solid ${
-      theme.palette.mode === 'dark' ? grey[900] : grey[200]
-    }`,
-  },
+  display: 'flex',
+  flexDirection: 'column',
+  background: theme.palette.background.paper,
 }));

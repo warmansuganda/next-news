@@ -1,12 +1,18 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import type { NextPageContext } from 'next';
 import { useTranslation } from 'react-i18next';
+import numeral from 'numeral';
 
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import DefaultLayout from '@layouts/DefaultLayout';
 import Input from '@components/Input';
@@ -14,10 +20,8 @@ import NewsCard from 'src/features/NewsCard';
 import Empty from '@components/Empty';
 
 import { useAppSelector } from '@hooks/index';
-import { Library as LibaryType } from '@stores/user';
-
-import { ARTICLE_DETAIL } from '@constants/path';
-import { base64Ecode } from '@utils/base64';
+import { WalletLog } from '@stores/user';
+import dateAdapter from '@utils/dateAdapter';
 
 import { ToolBox, SearchBox, ListWrapper, FilterBox } from './styles';
 import filters from './filters.json';
@@ -38,49 +42,41 @@ function Library({ defaultQuery, defaultFilter }: LibraryPorps) {
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState(defaultQuery);
   const [filter, setFilter] = useState(defaultFilter);
-  const [library, setLibrary] = useState<LibaryType[]>([]);
+  const [wallet, setWallet] = useState<WalletLog[]>([]);
 
   const data = useMemo(() => {
-    const result = [...library];
+    const result = [...wallet];
     return result
       .filter((item) => {
         let queryStatus = true;
         let filterStatus = true;
 
         if (query) {
-          queryStatus =
-            item.news.headline.main
-              .toLowerCase()
-              .includes(query.toLowerCase()) ||
-            item.news.abstract.toLowerCase().includes(query.toLowerCase());
+          queryStatus = item.note.toLowerCase().includes(query.toLowerCase());
         }
 
         if (filter && filter !== 'all') {
-          if (filter === 'premium') {
-            filterStatus = item.price > 0;
-          } else if (filter === 'free') {
-            filterStatus = item.price === 0;
-          }
+          filterStatus = filter === item.type;
         }
 
         return queryStatus && filterStatus;
       })
       .slice(0, page * PAGE_SIZE);
-  }, [library, query, page, filter]);
+  }, [wallet, query, page, filter]);
 
   useEffect(() => {
-    setLibrary(user.library);
+    setWallet(user.wallet.logs);
     setLoading(false);
-  }, [user.library]);
+  }, [user.wallet]);
 
   const handleLoadMore = useDebouncedCallback(
     useCallback(() => {
-      const maxPage = Math.ceil(library.length / PAGE_SIZE);
+      const maxPage = Math.ceil(wallet.length / PAGE_SIZE);
       const newPage = page + 1;
       if (newPage <= maxPage) {
         setPage(newPage);
       }
-    }, [page, library]),
+    }, [page, wallet]),
     500
   );
 
@@ -131,19 +127,33 @@ function Library({ defaultQuery, defaultFilter }: LibraryPorps) {
   const renderList = () => {
     if (data.length > 0) {
       return data.map((item) => (
-        <Link
-          key={item.news.uri}
-          href={{
-            pathname: ARTICLE_DETAIL,
-            query: {
-              id: base64Ecode(item.news.web_url),
-            },
-          }}
+        <ListItem
+          key={item.id}
+          secondaryAction={
+            <Typography
+              variant="subtitle2"
+              color={item.type === 'income' ? 'success' : 'error'}
+            >
+              {`${item.type === 'income' ? '+' : '-'} ${numeral(
+                item.amount
+              ).format('0,0')}`}
+            </Typography>
+          }
         >
-          <a style={{ textDecoration: 'none', color: 'inherit' }}>
-            <NewsCard data={item.news} />
-          </a>
-        </Link>
+          <ListItemAvatar>
+            <Avatar>
+              {item.type === 'income' ? (
+                <CloudDownloadIcon />
+              ) : (
+                <CloudUploadIcon />
+              )}
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={item.note}
+            secondary={dateAdapter.format(item.date, 'fullDateTime')}
+          />
+        </ListItem>
       ));
     }
 
@@ -167,7 +177,7 @@ function Library({ defaultQuery, defaultFilter }: LibraryPorps) {
       <ToolBox>
         <SearchBox>
           <Input
-            placeholder={t('Search transaction')}
+            placeholder={t('Search wallet transaction logs')}
             defaultValue={query}
             onChange={(e) => debounced(e.target.value)}
           />
@@ -185,8 +195,9 @@ function Library({ defaultQuery, defaultFilter }: LibraryPorps) {
             />
           ))}
         </FilterBox>
+        <Typography variant="h6">{t('Recent Activity')}</Typography>
       </ToolBox>
-      <ListWrapper spacing={2}>
+      <ListWrapper>
         {renderList()}
         {loading &&
           Array(2)

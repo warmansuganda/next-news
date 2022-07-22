@@ -19,7 +19,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
-import CloudUpload from '@mui/icons-material/CloudUpload';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import VerifiedIcon from '@mui/icons-material/Verified';
 
@@ -157,7 +157,7 @@ function Account() {
           </ItemCard>
           <ItemCard>
             <div>
-              <CloudUpload color="primary" />
+              <CloudUploadIcon color="primary" />
             </div>
             <Typography variant="h6">
               {numeral(wallet.expense).format('0,0a')}

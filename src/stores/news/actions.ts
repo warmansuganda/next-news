@@ -24,3 +24,5 @@ export const fetchMoreNews = createAction<QueryParams>(
 export const purchaseNews = createAction<PurchaseNews>(
   NewsActionTypes.PURCHASE
 );
+
+export const resetNews = createAction(NewsActionTypes.RESET);

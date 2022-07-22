@@ -24,8 +24,11 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import VerifiedIcon from '@mui/icons-material/Verified';
 
 import { useAppSelector, useAppDispatch } from '@hooks/index';
-import { changeTheme, ThemeType } from '@stores/app';
+import { changeTheme, resetApp, ThemeType } from '@stores/app';
 import { WALLET, LIBRARY, COUPON } from '@constants/path';
+
+import { resetNews } from '@stores/news';
+import { resetUser } from '@stores/user';
 
 import {
   ProfileCard,
@@ -57,6 +60,16 @@ function Account() {
 
   const handleClearData = () => {
     setOpen(false);
+
+    localStorage.removeItem('app:theme');
+    localStorage.removeItem('app:library');
+    localStorage.removeItem('app:wallet');
+    localStorage.removeItem('app:coupon');
+    localStorage.removeItem('app:redeem');
+
+    dispatch(resetApp());
+    dispatch(resetNews());
+    dispatch(resetUser());
   };
 
   const handleChangeTheme = (theme: ThemeType) => dispatch(changeTheme(theme));
@@ -250,7 +263,7 @@ function Account() {
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               {t(
-                'All data on this apps will be deleted permanently. This includes Library, Wallet, Setting, etc.'
+                'All data on this apps will be deleted permanently. This includes Library, Wallet, Coupon, Setting, etc.'
               )}
             </DialogContentText>
           </DialogContent>

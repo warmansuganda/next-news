@@ -17,3 +17,5 @@ export const createAlert = createAction<AlertOptions>(
 
 export const removeAlert = createAction<string>(AppActionTypes.REMOVE_ALERT);
 export const clearAlert = createAction(AppActionTypes.CLEAR_ALERT);
+
+export const resetApp = createAction(AppActionTypes.RESET);

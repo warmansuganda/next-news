@@ -68,4 +68,5 @@ export enum UserActionTypes {
   ADD_REDEEM = 'user/addRedeem',
   UPDATE_REDEEM = 'user/updateRedeem',
   UPDATE_REDEEM_SUCCCESS = 'user/updateRedeemSuccess',
+  RESET = 'user/reset',
 }

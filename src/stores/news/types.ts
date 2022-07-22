@@ -23,4 +23,5 @@ export enum NewsActionTypes {
   FETCH_SUCCESS = 'news/fetchSuccess',
   FETCH_MORE = 'news/fetchMore',
   PURCHASE = 'news/purchase',
+  RESET = 'news/reset',
 }

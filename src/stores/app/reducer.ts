@@ -6,6 +6,7 @@ import {
   createAlert,
   removeAlert,
   clearAlert,
+  resetApp,
 } from './actions';
 
 import { AppState } from './types';
@@ -59,5 +60,6 @@ export const appReducer = createReducer(initialState, (builder) => {
     .addCase(clearAlert, (state) => ({
       ...state,
       alerts: [],
-    }));
+    }))
+    .addCase(resetApp, () => initialState);
 });

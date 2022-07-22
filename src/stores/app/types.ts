@@ -31,6 +31,7 @@ export enum AppActionTypes {
   CREATE_ALERT = 'app/createAlert',
   REMOVE_ALERT = 'app/removeAlert',
   CLEAR_ALERT = 'app/clearAlert',
+  RESET = 'app/reset',
 }
 
 export type LoadingActions =

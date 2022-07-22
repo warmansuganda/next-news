@@ -5,6 +5,7 @@ import {
   fetchNewsLoading,
   fetchNewsSucess,
   fetchMostPopularNews,
+  resetNews,
 } from './actions';
 import { NewsState } from './types';
 
@@ -37,5 +38,6 @@ export const newsReducer = createReducer(initialState, (builder) => {
     .addCase(fetchNewsSucess, (state, action) => ({
       ...state,
       data: action.payload,
-    }));
+    }))
+    .addCase(resetNews, () => initialState);
 });

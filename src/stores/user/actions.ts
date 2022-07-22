@@ -60,3 +60,5 @@ export const updateRedeem = createAction<Redeem[]>(
 export const updateRedeemSuccess = createAction(
   UserActionTypes.UPDATE_REDEEM_SUCCCESS
 );
+
+export const resetUser = createAction(UserActionTypes.RESET);

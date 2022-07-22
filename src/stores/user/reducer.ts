@@ -1,6 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 
 import {
+  resetUser,
   searchUser,
   updateCoupon,
   updateLibrary,
@@ -41,5 +42,6 @@ export const userReducer = createReducer(initialState, (builder) => {
     .addCase(updateRedeem, (state, action) => ({
       ...state,
       redeem: action.payload,
-    }));
+    }))
+    .addCase(resetUser, () => initialState);
 });

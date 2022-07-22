@@ -1,7 +1,7 @@
 import { News } from '@services/news/types';
 
 export interface WalletTransaction {
-  type: 'debit' | 'credit';
+  type: 'expense' | 'income';
   amount: number;
   note: string;
 }

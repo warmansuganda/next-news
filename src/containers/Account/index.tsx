@@ -65,22 +65,22 @@ function Account() {
   };
 
   const wallet = useMemo(() => {
-    let credit = 0;
-    let debit = 0;
+    let income = 0;
+    let expense = 0;
 
     for (let index = 0; index < user.wallet.logs.length; index += 1) {
       const element = user.wallet.logs[index];
-      if (element.type === 'debit') {
-        debit += element.amount;
+      if (element.type === 'expense') {
+        expense += element.amount;
       } else {
-        credit += element.amount;
+        income += element.amount;
       }
     }
 
     return {
       balance: user.wallet.balance,
-      credit,
-      debit,
+      income,
+      expense,
     };
   }, [user.wallet]);
 
@@ -149,10 +149,10 @@ function Account() {
               <CloudDownloadIcon color="primary" />
             </div>
             <Typography variant="h6">
-              {numeral(wallet.credit).format('0,0a')}
+              {numeral(wallet.income).format('0,0a')}
             </Typography>
             <Typography variant="body2" color="GrayText">
-              {t('Credit')}
+              {t('Income')}
             </Typography>
           </ItemCard>
           <ItemCard>
@@ -160,10 +160,10 @@ function Account() {
               <CloudUpload color="primary" />
             </div>
             <Typography variant="h6">
-              {numeral(wallet.debit).format('0,0a')}
+              {numeral(wallet.expense).format('0,0a')}
             </Typography>
             <Typography variant="body2" color="GrayText">
-              {t('Debit')}
+              {t('Expense')}
             </Typography>
           </ItemCard>
         </SectionCard>

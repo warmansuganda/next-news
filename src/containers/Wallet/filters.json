@@ -1,0 +1,14 @@
+[
+  {
+    "key": "all",
+    "label": "All"
+  },
+  {
+    "key": "income",
+    "label": "Income"
+  },
+  {
+    "key": "expense",
+    "label": "Expense"
+  }
+]

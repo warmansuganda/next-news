@@ -52,7 +52,7 @@ const updateWalletEpic: Epic<AnyAction, AnyAction> = (action$, state$) =>
 
       // upddate balance
       let newBalance = balance;
-      if (payload.type === 'credit') {
+      if (payload.type === 'income') {
         newBalance += payload.amount;
       } else {
         newBalance -= payload.amount;

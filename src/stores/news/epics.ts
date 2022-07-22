@@ -193,7 +193,7 @@ const purchaseNewsEpic: Epic<AnyAction, AnyAction> = (action$, state$) =>
           news: payload.news,
         }),
         walletTransaction({
-          type: 'debit',
+          type: 'expense',
           amount: price,
           note: i18n.t('Purchase {{news}}', {
             news: payload.news.headline.main,

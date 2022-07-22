@@ -1,3 +1,3 @@
-import Library from '@containers/Library';
+import Wallet from '@containers/Wallet';
 
-export default Library;
+export default Wallet;

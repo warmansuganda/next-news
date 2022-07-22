@@ -167,7 +167,7 @@ function Library({ defaultQuery, defaultFilter }: LibraryPorps) {
       <ToolBox>
         <SearchBox>
           <Input
-            placeholder={t('Search news, i.e. election')}
+            placeholder={t('Search transaction')}
             defaultValue={query}
             onChange={(e) => debounced(e.target.value)}
           />

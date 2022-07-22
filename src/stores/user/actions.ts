@@ -30,3 +30,7 @@ export const updateWallet = createAction<Wallet>(UserActionTypes.UPDATE_WALLET);
 export const updateWalletSuccess = createAction(
   UserActionTypes.UPDATE_WALLET_SUCCESS
 );
+
+export const updateWalletSkip = createAction(
+  UserActionTypes.UPDATE_WALLET_SKIP
+);

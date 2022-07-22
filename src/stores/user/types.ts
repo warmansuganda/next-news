@@ -43,4 +43,5 @@ export enum UserActionTypes {
   WALLET_TRANSACTION = 'user/walletTransaction',
   UPDATE_WALLET = 'user/updateWallet',
   UPDATE_WALLET_SUCCESS = 'user/updateWalletSuccess',
+  UPDATE_WALLET_SKIP = 'user/updateWalletSkip',
 }

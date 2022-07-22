@@ -8,6 +8,7 @@ import {
   updateLibrary,
   updateLibrarySuccess,
   updateWallet,
+  updateWalletSkip,
   updateWalletSuccess,
 } from './actions';
 
@@ -35,32 +36,36 @@ const updateLibraryEpic: Epic<AnyAction, AnyAction> = (action$) =>
     map(() => updateLibrarySuccess())
   );
 
-const updateWalletEpic: Epic<AnyAction, AnyAction> = (action$, state$) =>
+const walletTransactionEpic: Epic<AnyAction, AnyAction> = (action$, state$) =>
   action$.pipe(
     ofType(UserActionTypes.WALLET_TRANSACTION),
     map(({ payload }) => {
-      const { balance, logs } = state$.value.user.wallet;
+      if (payload.amount > 0) {
+        const { balance, logs } = state$.value.user.wallet;
 
-      // push logs
-      const newLog = [...logs];
-      newLog.push({
-        id: uuidv4(),
-        date: new Date(),
-        isRead: false,
-        ...payload,
-      });
+        // push logs
+        const newLog = [...logs];
+        newLog.push({
+          id: uuidv4(),
+          date: new Date(),
+          isRead: false,
+          ...payload,
+        });
 
-      // upddate balance
-      let newBalance = balance;
-      if (payload.type === 'income') {
-        newBalance += payload.amount;
-      } else {
-        newBalance -= payload.amount;
+        // upddate balance
+        let newBalance = balance;
+        if (payload.type === 'income') {
+          newBalance += payload.amount;
+        } else {
+          newBalance -= payload.amount;
+        }
+        return updateWallet({
+          balance: newBalance,
+          logs: newLog,
+        });
       }
-      return updateWallet({
-        balance: newBalance,
-        logs: newLog,
-      });
+
+      return updateWalletSkip();
     })
   );
 
@@ -76,6 +81,6 @@ const updateWalletSuccessEpic: Epic<AnyAction, AnyAction> = (action$) =>
 export const userEpic = combineEpics(
   addLibraryEpic,
   updateLibraryEpic,
-  updateWalletEpic,
+  walletTransactionEpic,
   updateWalletSuccessEpic
 );

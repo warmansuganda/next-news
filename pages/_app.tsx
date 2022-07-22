@@ -10,7 +10,7 @@ import { CacheProvider, EmotionCache } from '@emotion/react';
 
 import { wrapper } from '@stores/index';
 import { changeTheme, ThemeType, loadingStart, loadingEnd } from '@stores/app';
-import { Library, updateLibrary } from '@stores/user';
+import { Library, updateLibrary, updateWallet, Wallet } from '@stores/user';
 
 import { useAppSelector, useAppDispatch } from '@hooks/index';
 
@@ -68,14 +68,17 @@ function MyApp({
   useEffect(() => {
     const defaultTheme = localStorage.getItem('app:theme');
     const defaultLibrary = localStorage.getItem('app:library');
+    const defaultWallet = localStorage.getItem('app:wallet');
 
     dispatch(changeTheme((defaultTheme || 'light') as ThemeType));
 
-    dispatch(
-      updateLibrary(
-        (defaultLibrary ? JSON.parse(defaultLibrary) : []) as Library[]
-      )
-    );
+    if (defaultLibrary) {
+      dispatch(updateLibrary(JSON.parse(defaultLibrary) as Library[]));
+    }
+
+    if (defaultWallet) {
+      dispatch(updateWallet(JSON.parse(defaultWallet) as Wallet));
+    }
   }, []);
 
   return (

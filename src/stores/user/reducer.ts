@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 
-import { searchUser, updateLibrary } from './actions';
+import { searchUser, updateLibrary, updateWallet } from './actions';
 import { UserState } from './types';
 
 const initialState: UserState = {
@@ -21,5 +21,9 @@ export const userReducer = createReducer(initialState, (builder) => {
     .addCase(updateLibrary, (state, action) => ({
       ...state,
       library: action.payload,
+    }))
+    .addCase(updateWallet, (state, action) => ({
+      ...state,
+      wallet: action.payload,
     }));
 });

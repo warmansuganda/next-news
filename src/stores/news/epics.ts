@@ -9,7 +9,7 @@ import { ErrorResponse } from '@services/types';
 
 import { createAlert } from '@stores/app';
 import i18n from '@locales/i18n';
-import { Library, updateLibrary } from '@stores/user';
+import { Library, addLibrary, walletTransaction } from '@stores/user';
 import getPrice from '@utils/getPrice';
 
 import { NewsActionTypes } from './types';
@@ -134,45 +134,61 @@ const fetchMostPopularNewsEpic: Epic<AnyAction, AnyAction> = (action$) =>
 const purchaseNewsEpic: Epic<AnyAction, AnyAction> = (action$, state$) =>
   action$.pipe(
     ofType(NewsActionTypes.PURCHASE),
-    map(({ payload }) => {
-      const library = [...state$.value.user.library];
+    switchMap(({ payload }) => {
+      const { library } = state$.value.user;
 
       // Data existing validation
       const index = library.findIndex(
         (item: Library) => item.news.uri === payload.news.uri
       );
       if (index > -1) {
-        return createAlert({
-          severity: 'error',
-          message: i18n.t('You already bought this news'),
-        });
+        return of(
+          createAlert({
+            severity: 'error',
+            message: i18n.t('You already bought this news'),
+          })
+        );
       }
 
       // Price validation
       const price = getPrice(payload.news);
       if (Number(price) !== payload.price) {
-        return createAlert({
-          severity: 'error',
-          message: i18n.t('Price has been updated, please reload your page.'),
-        });
+        return of(
+          createAlert({
+            severity: 'error',
+            message: i18n.t('Price has been updated, please reload your page.'),
+          })
+        );
       }
 
       // wallet balance validation
       const { balance } = state$.value.user.wallet;
       if (balance < price) {
-        return createAlert({
-          severity: 'error',
-          message: i18n.t('Your balance is not enough'),
-        });
+        return of(
+          createAlert({
+            severity: 'error',
+            message: i18n.t('Your balance is not enough'),
+          })
+        );
       }
 
-      library.push({
-        id: payload.news.uri.replaceAll('nyt://article/', ''),
-        date: new Date(),
-        price: payload.price,
-        news: payload.news,
-      });
-      return updateLibrary(library);
+      return of(
+        addLibrary({
+          price,
+          news: payload.news,
+        }),
+        walletTransaction({
+          type: 'debit',
+          amount: price,
+          note: i18n.t('Purchase {{news}}', {
+            news: payload.news.headline.main,
+          }),
+        }),
+        createAlert({
+          severity: 'success',
+          message: i18n.t('Purchase success'),
+        })
+      );
     })
   );
 

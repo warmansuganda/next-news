@@ -1,11 +1,14 @@
 import { News } from '@services/news/types';
 
-export interface WalletLog {
-  id: number;
-  date: Date;
-  type: 'debit' | 'crdit';
+export interface WalletTransaction {
+  type: 'debit' | 'credit';
   amount: number;
   note: string;
+}
+
+export interface WalletLog extends WalletTransaction {
+  id: number;
+  date: Date;
   isRead: boolean;
 }
 
@@ -16,17 +19,28 @@ export interface Library {
   news: News;
 }
 
+export interface AddLibrary {
+  price: number;
+  news: News;
+}
+
+export interface Wallet {
+  balance: number;
+  logs: WalletLog[];
+}
+
 export interface UserState {
   search: string;
-  wallet: {
-    balance: number;
-    logs: WalletLog[];
-  };
+  wallet: Wallet;
   library: Library[];
 }
 
 export enum UserActionTypes {
   SEARCH = 'user/search',
+  ADD_LIBARY = 'user/addLibrary',
   UPDATE_LIBARY = 'user/updateLibrary',
   UPDATE_LIBARY_SUCCCESS = 'user/updateLibrarySuccess',
+  WALLET_TRANSACTION = 'user/walletTransaction',
+  UPDATE_WALLET = 'user/updateWallet',
+  UPDATE_WALLET_SUCCESS = 'user/updateWalletSuccess',
 }

@@ -9,7 +9,7 @@ import CloudOffIcon from '@mui/icons-material/CloudOff';
 
 import Header from '@components/Header';
 
-function DefaultLayout() {
+function PageNotFound() {
   return (
     <>
       <Header
@@ -49,4 +49,4 @@ function DefaultLayout() {
   );
 }
 
-export default DefaultLayout;
+export default PageNotFound;

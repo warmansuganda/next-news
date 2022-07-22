@@ -92,32 +92,6 @@ function ArticleDetail({ data }: ArticleDetailProps) {
     dispatch(purchaseNews({ price, news: data }));
   }, [price, data]);
 
-  // useEffect(() => {
-  //   const body = document.querySelector<HTMLElement>('body');
-  //   const showScroll = () => {
-  //     if (typeof window !== 'undefined') {
-  //       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //       // @ts-ignore: Unreachable code error
-  //       body.style.overflow = 'auto';
-  //     }
-  //   };
-
-  //   const hideScroll = () => {
-  //     if (typeof window !== 'undefined') {
-  //       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //       // @ts-ignore: Unreachable code error
-  //       body.style.overflow = 'auto';
-  //     }
-  //   };
-
-  //   if (hasNews) showScroll();
-  //   else hideScroll();
-
-  //   return () => {
-  //     showScroll();
-  //   };
-  // }, [hasNews]);
-
   return (
     <DefaultLayout>
       <ArticleMedia>

@@ -4,14 +4,12 @@ import Link from 'next/link';
 import { HeaderWrapper, HeaderAction, HeaderTitle } from './sytles';
 
 interface HeaderProps {
-  accessoryLeft?: ReactNode;
   accessoryRight?: ReactNode;
 }
 
-function Header({ accessoryLeft, accessoryRight }: HeaderProps) {
+function Header({ accessoryRight }: HeaderProps) {
   return (
     <HeaderWrapper disableGutters maxWidth="xs">
-      {accessoryLeft && <HeaderAction>{accessoryLeft}</HeaderAction>}
       <HeaderTitle>
         <Link href="/">
           <a>

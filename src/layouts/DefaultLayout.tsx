@@ -13,21 +13,19 @@ import { useAppSelector } from '@hooks/index';
 
 interface DefaultLayoutProps {
   children: ReactNode | ReactNode[];
-  accessoryLeft?: ReactNode;
 }
 
-function DefaultLayout({ children, accessoryLeft }: DefaultLayoutProps) {
+function DefaultLayout({ children }: DefaultLayoutProps) {
   const { t } = useTranslation();
   const { user } = useAppSelector((state) => state);
 
   return (
     <>
       <Header
-        accessoryLeft={accessoryLeft}
         accessoryRight={
           <Tooltip title={t('Your balance')} arrow>
             <Button startIcon={<MonetizationOnIcon />}>
-              {numeral(user.wallet.balance).format('0,0')}
+              {numeral(user.wallet.balance).format('0,0a')}
             </Button>
           </Tooltip>
         }

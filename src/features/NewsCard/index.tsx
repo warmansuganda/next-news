@@ -4,6 +4,7 @@ import numeral from 'numeral';
 import { useTranslation } from 'react-i18next';
 
 import Typography from '@mui/material/Typography';
+import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 
 import { News } from '@services/news/types';
 import Image from '@components/Image';
@@ -18,6 +19,7 @@ import {
   CardActions,
   CardSection,
   PurchaseButton,
+  Subscribed,
 } from './styles';
 import NewsCardPlaceHolder from './placeholder';
 
@@ -53,9 +55,12 @@ function NewsCard({ data }: NewsCardProps) {
 
   const price = useMemo(() => getPrice(data), [data]);
 
-  const hasNews = useMemo(() => {
-    const index = user.library.findIndex((item) => item.news.uri === data.uri);
-    return index > -1;
+  const subscription = useMemo(() => {
+    const element = user.library.find((item) => item.news.uri === data.uri);
+    return {
+      status: !!element,
+      data: element,
+    };
   }, [data, user.library]);
 
   const handlePurchase = useCallback(
@@ -81,11 +86,20 @@ function NewsCard({ data }: NewsCardProps) {
           <div>{data.section_name}</div>
           <div>{dateDiff}</div>
         </CardSection>
-        {!hasNews && (
+        {!subscription.status ? (
           <PurchaseButton onClick={handlePurchase}>
             {price ? numeral(price).format('$ 0,0') : t('Free')} |{' '}
             {t('Purchase')}
           </PurchaseButton>
+        ) : (
+          <Subscribed>
+            <Typography color="GrayText">
+              {subscription?.data?.price
+                ? numeral(subscription.data.price).format('$ 0,0')
+                : t('Free')}
+            </Typography>
+            <BookmarkAddedIcon color="primary" />
+          </Subscribed>
         )}
       </CardActions>
     </Card>

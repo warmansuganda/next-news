@@ -4,15 +4,11 @@
     "label": "All"
   },
   {
-    "key": "most-emailed",
-    "label": "Most Emailed"
+    "key": "premium",
+    "label": "Premium"
   },
   {
-    "key": "most-shared",
-    "label": "Most Shared"
-  },
-  {
-    "key": "most-viewed",
-    "label": "Most Viewed"
+    "key": "free",
+    "label": "Free"
   }
 ]

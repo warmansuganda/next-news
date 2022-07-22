@@ -17,7 +17,6 @@ export const ToolBox = styled(Box)(({ theme }) => ({
 export const SearchBox = styled(Box)(() => ({
   display: 'grid',
   gap: '8px',
-  // gridTemplateColumns: '1fr 45px',
   marginBottom: '16px',
 }));
 

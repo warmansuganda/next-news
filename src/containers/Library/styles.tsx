@@ -16,6 +16,16 @@ export const ToolBox = styled(Box)(({ theme }) => ({
 export const SearchBox = styled(Box)(() => ({
   display: 'grid',
   gap: '8px',
+  marginBottom: '16px',
+}));
+
+export const FilterBox = styled(Stack)(() => ({
+  overflowX: 'auto',
+  scrollbarWidth: 'none',
+  msOverflowStyle: 'none',
+  '::-webkit-scrollbar': {
+    display: 'none',
+  },
 }));
 
 export const ListWrapper = styled(Stack)(({ theme }) => ({

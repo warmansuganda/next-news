@@ -5,10 +5,8 @@ import { useRouter } from 'next/router';
 import type { NextPageContext } from 'next';
 import { useTranslation } from 'react-i18next';
 
-// import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-// import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-// import FilterListIcon from '@mui/icons-material/FilterList';
+import Chip from '@mui/material/Chip';
 
 import DefaultLayout from '@layouts/DefaultLayout';
 import Input from '@components/Input';
@@ -21,15 +19,17 @@ import { Library as LibaryType } from '@stores/user';
 import { ARTICLE_DETAIL } from '@constants/path';
 import { base64Ecode } from '@utils/base64';
 
-import { ToolBox, SearchBox, ListWrapper } from './styles';
+import { ToolBox, SearchBox, ListWrapper, FilterBox } from './styles';
+import filters from './filters.json';
 
 interface LibraryPorps {
   defaultQuery: string;
+  defaultFilter: string;
 }
 
 const PAGE_SIZE = 3;
 
-function Library({ defaultQuery }: LibraryPorps) {
+function Library({ defaultQuery, defaultFilter }: LibraryPorps) {
   const { user } = useAppSelector((state) => state);
   const router = useRouter();
   const { t } = useTranslation();
@@ -37,25 +37,36 @@ function Library({ defaultQuery }: LibraryPorps) {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState(defaultQuery);
+  const [filter, setFilter] = useState(defaultFilter);
   const [library, setLibrary] = useState<LibaryType[]>([]);
 
   const data = useMemo(() => {
     const result = [...library];
     return result
       .filter((item) => {
+        let queryStatus = true;
+        let filterStatus = true;
+
         if (query) {
-          return (
+          queryStatus =
             item.news.headline.main
               .toLowerCase()
               .includes(query.toLowerCase()) ||
-            item.news.abstract.toLowerCase().includes(query.toLowerCase())
-          );
+            item.news.abstract.toLowerCase().includes(query.toLowerCase());
         }
 
-        return true;
+        if (filter && filter !== 'all') {
+          if (filter === 'premium') {
+            filterStatus = item.price > 0;
+          } else if (filter === 'free') {
+            filterStatus = item.price === 0;
+          }
+        }
+
+        return queryStatus && filterStatus;
       })
       .slice(0, page * PAGE_SIZE);
-  }, [library, query, page]);
+  }, [library, query, page, filter]);
 
   useEffect(() => {
     setLibrary(user.library);
@@ -99,6 +110,23 @@ function Library({ defaultQuery }: LibraryPorps) {
   }, []);
 
   const debounced = useDebouncedCallback(handleChange, 500);
+
+  const handleFilter = useCallback(
+    (keyword: string) => {
+      if (keyword !== filter) {
+        setPage(1);
+        setFilter(keyword);
+
+        router.push({
+          query: {
+            ...(query ? { query } : {}),
+            ...(keyword && keyword !== 'all' ? { filter: keyword } : {}),
+          },
+        });
+      }
+    },
+    [query, filter]
+  );
 
   const renderList = () => {
     if (data.length > 0) {
@@ -144,6 +172,19 @@ function Library({ defaultQuery }: LibraryPorps) {
             onChange={(e) => debounced(e.target.value)}
           />
         </SearchBox>
+        <FilterBox direction="row" spacing={1}>
+          {filters.map((item) => (
+            <Chip
+              component="a"
+              key={item.key}
+              label={t(item.label)}
+              color="primary"
+              variant={filter === item.key ? 'filled' : 'outlined'}
+              onClick={() => handleFilter(item.key)}
+              clickable
+            />
+          ))}
+        </FilterBox>
       </ToolBox>
       <ListWrapper spacing={2}>
         {renderList()}
@@ -158,6 +199,7 @@ function Library({ defaultQuery }: LibraryPorps) {
 
 Library.getInitialProps = ({ query }: NextPageContext) => ({
   defaultQuery: query.query,
+  defaultFilter: query.filter || 'all',
 });
 
 export default Library;

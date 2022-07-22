@@ -48,6 +48,11 @@ export const CardSection = styled(Box)(() => ({
   },
 }));
 
+export const Subscribed = styled(Box)(() => ({
+  display: 'flex',
+  alignItems: 'center',
+}));
+
 export const PurchaseButton = styled(Button)(() => ({
   borderRadius: '50px',
 }));

@@ -161,6 +161,21 @@ const purchaseNewsEpic: Epic<AnyAction, AnyAction> = (action$, state$) =>
         );
       }
 
+      // free limit validation
+      if (!price) {
+        const countFreeNews = library.filter(
+          (item: Library) => Number(item.price) === 0
+        ).length;
+        if (countFreeNews === 5) {
+          return of(
+            createAlert({
+              severity: 'error',
+              message: i18n.t('Your free limit is up'),
+            })
+          );
+        }
+      }
+
       // wallet balance validation
       const { balance } = state$.value.user.wallet;
       if (balance < price) {

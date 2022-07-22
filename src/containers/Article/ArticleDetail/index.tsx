@@ -1,8 +1,9 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import getConfig from 'next/config';
 import { useTranslation } from 'react-i18next';
 import type { NextPageContext } from 'next';
 import numeral from 'numeral';
+import { LoremIpsum } from 'lorem-ipsum';
 
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
@@ -34,6 +35,16 @@ import {
 } from './styles';
 
 const { publicRuntimeConfig: config } = getConfig();
+const lorem = new LoremIpsum({
+  sentencesPerParagraph: {
+    max: 8,
+    min: 4,
+  },
+  wordsPerSentence: {
+    max: 16,
+    min: 4,
+  },
+});
 
 interface ArticleDetailProps {
   data: News;
@@ -45,6 +56,11 @@ function ArticleDetail({ data }: ArticleDetailProps) {
   const { t } = useTranslation();
   const { user } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
+  const [fakeContent, setFakeContent] = useState<number[]>([]);
+
+  useEffect(() => {
+    setFakeContent(Array(5).fill(1));
+  }, []);
 
   const media = useMemo(() => {
     const image = data.multimedia.find(
@@ -75,6 +91,20 @@ function ArticleDetail({ data }: ArticleDetailProps) {
   const handlePurchase = useCallback(() => {
     dispatch(purchaseNews({ price, news: data }));
   }, [price, data]);
+
+  useEffect(() => {
+    const body = document.querySelector<HTMLElement>('body');
+
+    if (hasNews) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore: Unreachable code error
+      body.style.overflow = 'auto';
+    } else {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore: Unreachable code error
+      body.style.overflow = 'hidden';
+    }
+  }, [hasNews]);
 
   return (
     <DefaultLayout>
@@ -119,6 +149,11 @@ function ArticleDetail({ data }: ArticleDetailProps) {
         <Typography gutterBottom variant="body1" component="div">
           {data.lead_paragraph}
         </Typography>
+        {fakeContent.map((item, index) => (
+          <Typography key={index} gutterBottom variant="body1" component="div">
+            {lorem.generateParagraphs(item)}
+          </Typography>
+        ))}
       </ArticleContent>
       {!hasNews && (
         <>

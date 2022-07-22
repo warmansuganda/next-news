@@ -151,7 +151,9 @@ function Home({ defaultQuery, defaultFilter }: HomePorps) {
             news.search ? t('No search result found for') : t('No result found')
           }
         >
-          <Typography variant="subtitle2">{`"${news.search}"`}</Typography>
+          {news.search && (
+            <Typography variant="subtitle2">{`"${news.search}"`}</Typography>
+          )}
         </Empty>
       );
     }

@@ -126,7 +126,7 @@ function Library({ defaultQuery }: LibraryPorps) {
             query ? t('No search result found for') : t('No result found')
           }
         >
-          <Typography variant="subtitle2">{`"${query}"`}</Typography>
+          {query && <Typography variant="subtitle2">{`"${query}"`}</Typography>}
         </Empty>
       );
     }

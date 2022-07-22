@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import getConfig from 'next/config';
 import { useTranslation } from 'react-i18next';
 import type { NextPageContext } from 'next';
@@ -18,6 +18,8 @@ import { DefaultLayout, PageNotFound } from '@layouts/index';
 import { News } from '@services/news/types';
 import { findNews } from '@services/news';
 import { dateAdapter, getPrice, base64Decode } from '@utils/index';
+import { useAppSelector, useAppDispatch } from '@hooks/index';
+import { purchaseNews } from '@stores/news';
 
 import {
   ArticleMedia,
@@ -41,6 +43,8 @@ function ArticleDetail({ data }: ArticleDetailProps) {
   if (!data) return <PageNotFound />;
 
   const { t } = useTranslation();
+  const { user } = useAppSelector((state) => state);
+  const dispatch = useAppDispatch();
 
   const media = useMemo(() => {
     const image = data.multimedia.find(
@@ -62,6 +66,15 @@ function ArticleDetail({ data }: ArticleDetailProps) {
   );
 
   const price = useMemo(() => getPrice(data), [data]);
+
+  const hasNews = useMemo(() => {
+    const index = user.library.findIndex((item) => item.news.uri === data.uri);
+    return index > -1;
+  }, [data, user.library]);
+
+  const handlePurchase = useCallback(() => {
+    dispatch(purchaseNews({ price, news: data }));
+  }, [price, data]);
 
   return (
     <DefaultLayout>
@@ -107,21 +120,25 @@ function ArticleDetail({ data }: ArticleDetailProps) {
           {data.lead_paragraph}
         </Typography>
       </ArticleContent>
-      <ArticleWraper maxWidth="xs" disableGutters />
-      <ArticleFooter maxWidth="xs" disableGutters>
-        <Paper
-          sx={{
-            flex: 1,
-            padding: '16px',
-          }}
-          elevation={3}
-        >
-          <PurchaseButton size="large" fullWidth>
-            {price ? numeral(price).format('$ 0,0') : t('Free')} |{' '}
-            {t('Purchase')}
-          </PurchaseButton>
-        </Paper>
-      </ArticleFooter>
+      {!hasNews && (
+        <>
+          <ArticleWraper maxWidth="xs" disableGutters />
+          <ArticleFooter maxWidth="xs" disableGutters>
+            <Paper
+              sx={{
+                flex: 1,
+                padding: '16px',
+              }}
+              elevation={3}
+            >
+              <PurchaseButton size="large" fullWidth onClick={handlePurchase}>
+                {price ? numeral(price).format('$ 0,0') : t('Free')} |{' '}
+                {t('Purchase')}
+              </PurchaseButton>
+            </Paper>
+          </ArticleFooter>
+        </>
+      )}
     </DefaultLayout>
   );
 }

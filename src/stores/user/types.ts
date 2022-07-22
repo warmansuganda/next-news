@@ -11,6 +11,7 @@ export interface WalletLog {
 
 export interface Library {
   id: number;
+  price: number;
   date: Date;
   news: News;
 }
@@ -26,4 +27,5 @@ export interface UserState {
 
 export enum UserActionTypes {
   SEARCH = 'user/search',
+  UPDATE_LIBARY = 'user/updateLibrary',
 }

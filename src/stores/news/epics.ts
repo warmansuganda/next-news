@@ -8,6 +8,9 @@ import { MostPopularNews } from '@services/news/types';
 import { ErrorResponse } from '@services/types';
 
 import { createAlert } from '@stores/app';
+import i18n from '@locales/i18n';
+import { Library, updateLibrary } from '@stores/user';
+import getPrice from '@utils/getPrice';
 
 import { NewsActionTypes } from './types';
 import { fetchNewsSucess, fetchNewsLoading } from './actions';
@@ -128,8 +131,45 @@ const fetchMostPopularNewsEpic: Epic<AnyAction, AnyAction> = (action$) =>
     )
   );
 
+const purchaseNewsEpic: Epic<AnyAction, AnyAction> = (action$, state$) =>
+  action$.pipe(
+    ofType(NewsActionTypes.PURCHASE),
+    map(({ payload }) => {
+      const library = [...state$.value.user.library];
+
+      // Data existing validation
+      const index = library.findIndex(
+        (item: Library) => item.news.uri === payload.news.uri
+      );
+      if (index > -1) {
+        return createAlert({
+          severity: 'error',
+          message: i18n.t('You already bought this news'),
+        });
+      }
+
+      // Price validation
+      const price = getPrice(payload.news);
+      if (Number(price) !== payload.price) {
+        return createAlert({
+          severity: 'error',
+          message: i18n.t('Price has been updated, please reload your page.'),
+        });
+      }
+
+      library.push({
+        id: payload.news.uri.replaceAll('nyt://article/', ''),
+        date: new Date(),
+        price: payload.price,
+        news: payload.news,
+      });
+      return updateLibrary(library);
+    })
+  );
+
 export const newsEpic = combineEpics(
   fetchNewsEpic,
   fetchMoreNewsEpic,
-  fetchMostPopularNewsEpic
+  fetchMostPopularNewsEpic,
+  purchaseNewsEpic
 );

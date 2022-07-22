@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback, MouseEvent } from 'react';
 import getConfig from 'next/config';
 import numeral from 'numeral';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +8,8 @@ import Typography from '@mui/material/Typography';
 import { News } from '@services/news/types';
 import Image from '@components/Image';
 import { dateAdapter, getPrice } from '@utils/index';
+import { useAppSelector, useAppDispatch } from '@hooks/index';
+import { purchaseNews } from '@stores/news';
 
 import {
   Card,
@@ -27,6 +29,8 @@ interface NewsCardProps {
 
 function NewsCard({ data }: NewsCardProps) {
   const { t } = useTranslation();
+  const { user } = useAppSelector((state) => state);
+  const dispatch = useAppDispatch();
 
   const media = useMemo(() => {
     const image = data.multimedia.find(
@@ -49,6 +53,19 @@ function NewsCard({ data }: NewsCardProps) {
 
   const price = useMemo(() => getPrice(data), [data]);
 
+  const hasNews = useMemo(() => {
+    const index = user.library.findIndex((item) => item.news.uri === data.uri);
+    return index > -1;
+  }, [data, user.library]);
+
+  const handlePurchase = useCallback(
+    (event: MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      dispatch(purchaseNews({ price, news: data }));
+    },
+    [price, data]
+  );
+
   return (
     <Card>
       <CardMedia>
@@ -64,9 +81,12 @@ function NewsCard({ data }: NewsCardProps) {
           <div>{data.section_name}</div>
           <div>{dateDiff}</div>
         </CardSection>
-        <PurchaseButton>
-          {price ? numeral(price).format('$ 0,0') : t('Free')} | {t('Purchase')}
-        </PurchaseButton>
+        {!hasNews && (
+          <PurchaseButton onClick={handlePurchase}>
+            {price ? numeral(price).format('$ 0,0') : t('Free')} |{' '}
+            {t('Purchase')}
+          </PurchaseButton>
+        )}
       </CardActions>
     </Card>
   );

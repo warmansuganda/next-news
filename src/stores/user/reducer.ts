@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 
-import { searchUser } from './actions';
+import { searchUser, updateLibrary } from './actions';
 import { UserState } from './types';
 
 const initialState: UserState = {
@@ -13,8 +13,13 @@ const initialState: UserState = {
 };
 
 export const userReducer = createReducer(initialState, (builder) => {
-  builder.addCase(searchUser, (state, action) => ({
-    ...state,
-    search: action.payload.query,
-  }));
+  builder
+    .addCase(searchUser, (state, action) => ({
+      ...state,
+      search: action.payload.query,
+    }))
+    .addCase(updateLibrary, (state, action) => ({
+      ...state,
+      library: action.payload,
+    }));
 });

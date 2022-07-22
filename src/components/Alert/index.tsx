@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import { useAppSelector, useAppDispatch } from '@hooks/index';
@@ -56,7 +56,7 @@ function Alert() {
             severity={item.severity}
             sx={{ width: '100%' }}
           >
-            {item.message}
+            {item.message as ReactNode}
           </MuiAlert>
         </Snackbar>
       ))}

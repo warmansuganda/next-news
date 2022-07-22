@@ -1,7 +1,7 @@
 import { createAction } from '@reduxjs/toolkit';
 import { QueryParams } from '@services/types';
 
-import { NewsActionTypes, NewsDataState } from './types';
+import { NewsActionTypes, NewsDataState, PurchaseNews } from './types';
 
 export const fetchNews = createAction<QueryParams>(NewsActionTypes.FETCH);
 
@@ -19,4 +19,8 @@ export const fetchNewsSucess = createAction<NewsDataState>(
 
 export const fetchMoreNews = createAction<QueryParams>(
   NewsActionTypes.FETCH_MORE
+);
+
+export const purchaseNews = createAction<PurchaseNews>(
+  NewsActionTypes.PURCHASE
 );

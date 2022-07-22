@@ -25,6 +25,7 @@ export const CardActions = styled(Box)(() => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+  minHeight: '44.5px',
 }));
 
 export const CardSection = styled(Box)(() => ({

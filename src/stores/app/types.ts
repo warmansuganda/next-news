@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { ActionPayload } from '@stores/types';
 import type { AlertColor } from '@mui/material/Alert';
+import type { TFunctionResult } from 'i18next';
 
 export type ThemeType = 'light' | 'dark';
 
@@ -9,7 +10,7 @@ export interface AlertOptions {
   createdAt?: Date;
   severity?: AlertColor;
   title?: string;
-  message: ReactNode;
+  message: ReactNode | TFunctionResult;
   duration?: number;
   autoDismiss?: boolean;
   closeable?: boolean;

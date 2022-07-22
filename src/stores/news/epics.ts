@@ -157,6 +157,15 @@ const purchaseNewsEpic: Epic<AnyAction, AnyAction> = (action$, state$) =>
         });
       }
 
+      // wallet balance validation
+      const { balance } = state$.value.user.wallet;
+      if (balance < price) {
+        return createAlert({
+          severity: 'error',
+          message: i18n.t('Your balance is not enough'),
+        });
+      }
+
       library.push({
         id: payload.news.uri.replaceAll('nyt://article/', ''),
         date: new Date(),

@@ -18,6 +18,7 @@ export const ArticleTitle = styled(Box)(() => ({
 
 export const ArticleContent = styled(Box)(() => ({
   paddingTop: '16px',
+  overflow: 'hidden',
 }));
 
 export const ArticleActions = styled(Box)(() => ({

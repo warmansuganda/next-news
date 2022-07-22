@@ -92,19 +92,31 @@ function ArticleDetail({ data }: ArticleDetailProps) {
     dispatch(purchaseNews({ price, news: data }));
   }, [price, data]);
 
-  useEffect(() => {
-    const body = document.querySelector<HTMLElement>('body');
+  // useEffect(() => {
+  //   const body = document.querySelector<HTMLElement>('body');
+  //   const showScroll = () => {
+  //     if (typeof window !== 'undefined') {
+  //       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //       // @ts-ignore: Unreachable code error
+  //       body.style.overflow = 'auto';
+  //     }
+  //   };
 
-    if (hasNews) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore: Unreachable code error
-      body.style.overflow = 'auto';
-    } else {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore: Unreachable code error
-      body.style.overflow = 'hidden';
-    }
-  }, [hasNews]);
+  //   const hideScroll = () => {
+  //     if (typeof window !== 'undefined') {
+  //       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //       // @ts-ignore: Unreachable code error
+  //       body.style.overflow = 'auto';
+  //     }
+  //   };
+
+  //   if (hasNews) showScroll();
+  //   else hideScroll();
+
+  //   return () => {
+  //     showScroll();
+  //   };
+  // }, [hasNews]);
 
   return (
     <DefaultLayout>
@@ -142,7 +154,9 @@ function ArticleDetail({ data }: ArticleDetailProps) {
         <div>{data.section_name}</div>
         <div>{dateDiff}</div>
       </ArticleSection>
-      <ArticleContent>
+      <ArticleContent
+        sx={hasNews ? { maxHeight: 'auto' } : { maxHeight: '40vh' }}
+      >
         <Typography gutterBottom variant="body1" component="div">
           {data.abstract}
         </Typography>

@@ -8,6 +8,7 @@ import {
   Wallet,
   AddLibrary,
   Coupon,
+  Redeem,
 } from './types';
 
 export const searchUser = createAction<QueryParams>(UserActionTypes.SEARCH);
@@ -38,6 +39,8 @@ export const updateWalletSkip = createAction(
 
 export const addCoupon = createAction<string>(UserActionTypes.ADD_COUPON);
 
+export const editCoupon = createAction<Coupon>(UserActionTypes.EDIT_COUPON);
+
 export const updateCoupon = createAction<Coupon[]>(
   UserActionTypes.UPDATE_COUPON
 );
@@ -47,3 +50,13 @@ export const updateCouponSuccess = createAction(
 );
 
 export const skipCoupon = createAction(UserActionTypes.SKIP_COUPON);
+
+export const addRedeem = createAction<Coupon>(UserActionTypes.ADD_REDEEM);
+
+export const updateRedeem = createAction<Redeem[]>(
+  UserActionTypes.UPDATE_REDEEM
+);
+
+export const updateRedeemSuccess = createAction(
+  UserActionTypes.UPDATE_REDEEM_SUCCCESS
+);

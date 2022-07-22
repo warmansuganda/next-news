@@ -10,7 +10,16 @@ import { CacheProvider, EmotionCache } from '@emotion/react';
 
 import { wrapper } from '@stores/index';
 import { changeTheme, ThemeType, loadingStart, loadingEnd } from '@stores/app';
-import { Library, updateLibrary, updateWallet, Wallet } from '@stores/user';
+import {
+  Coupon,
+  Library,
+  Redeem,
+  updateCoupon,
+  updateLibrary,
+  updateRedeem,
+  updateWallet,
+  Wallet,
+} from '@stores/user';
 
 import { useAppSelector, useAppDispatch } from '@hooks/index';
 
@@ -69,6 +78,8 @@ function MyApp({
     const defaultTheme = localStorage.getItem('app:theme');
     const defaultLibrary = localStorage.getItem('app:library');
     const defaultWallet = localStorage.getItem('app:wallet');
+    const defaultCoupon = localStorage.getItem('app:coupon');
+    const defaultRedeem = localStorage.getItem('app:redeem');
 
     dispatch(changeTheme((defaultTheme || 'light') as ThemeType));
 
@@ -78,6 +89,14 @@ function MyApp({
 
     if (defaultWallet) {
       dispatch(updateWallet(JSON.parse(defaultWallet) as Wallet));
+    }
+
+    if (defaultCoupon) {
+      dispatch(updateCoupon(JSON.parse(defaultCoupon) as Coupon[]));
+    }
+
+    if (defaultRedeem) {
+      dispatch(updateRedeem(JSON.parse(defaultRedeem) as Redeem[]));
     }
   }, []);
 

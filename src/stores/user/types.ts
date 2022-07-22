@@ -39,7 +39,7 @@ export interface Coupon {
 export interface Redeem {
   id: string;
   date: Date;
-  coupon: string;
+  coupon: Coupon;
   coin: number;
 }
 
@@ -61,7 +61,11 @@ export enum UserActionTypes {
   UPDATE_WALLET_SUCCESS = 'user/updateWalletSuccess',
   UPDATE_WALLET_SKIP = 'user/updateWalletSkip',
   ADD_COUPON = 'user/addCoupon',
+  EDIT_COUPON = 'user/editCoupon',
   SKIP_COUPON = 'user/skipCoupon',
   UPDATE_COUPON = 'user/updateCoupon',
   UPDATE_COUPON_SUCCCESS = 'user/updateCouponSuccess',
+  ADD_REDEEM = 'user/addRedeem',
+  UPDATE_REDEEM = 'user/updateRedeem',
+  UPDATE_REDEEM_SUCCCESS = 'user/updateRedeemSuccess',
 }

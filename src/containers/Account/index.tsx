@@ -108,7 +108,7 @@ function Account() {
   const coupon = useMemo(
     () => ({
       total: user.coupon.length,
-      new: user.coupon.filter((item) => !item.hasClaimed).length,
+      new: user.coupon.filter((item) => item.chance > 0).length,
     }),
     [user.coupon]
   );

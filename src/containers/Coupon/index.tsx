@@ -16,8 +16,8 @@ import Input from '@components/Input';
 import NewsCard from 'src/features/NewsCard';
 import Empty from '@components/Empty';
 
-import { useAppSelector } from '@hooks/index';
-import { Coupon } from '@stores/user';
+import { useAppSelector, useAppDispatch } from '@hooks/index';
+import { addRedeem, Coupon } from '@stores/user';
 import dateAdapter from '@utils/dateAdapter';
 
 import {
@@ -38,6 +38,7 @@ const PAGE_SIZE = 3;
 
 function Library({ defaultQuery, defaultFilter }: LibraryPorps) {
   const { user } = useAppSelector((state) => state);
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const { t } = useTranslation();
 
@@ -131,6 +132,10 @@ function Library({ defaultQuery, defaultFilter }: LibraryPorps) {
     [query, filter]
   );
 
+  const handleRedeem = (item: Coupon) => {
+    dispatch(addRedeem(item));
+  };
+
   const renderList = () => {
     if (data.length > 0) {
       return data.map((item) => (
@@ -152,6 +157,7 @@ function Library({ defaultQuery, defaultFilter }: LibraryPorps) {
               )}
             </Typography>
             <Chip
+              component="a"
               avatar={<Avatar>{item.chance}</Avatar>}
               label={t('Redeem')}
               size="small"
@@ -159,6 +165,7 @@ function Library({ defaultQuery, defaultFilter }: LibraryPorps) {
               variant="outlined"
               clickable
               disabled={item.chance === 0}
+              onClick={() => handleRedeem(item)}
             />
           </ListItemText>
         </ListItem>

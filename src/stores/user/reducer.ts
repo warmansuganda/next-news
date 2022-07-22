@@ -4,6 +4,7 @@ import {
   searchUser,
   updateCoupon,
   updateLibrary,
+  updateRedeem,
   updateWallet,
 } from './actions';
 import { UserState } from './types';
@@ -36,5 +37,9 @@ export const userReducer = createReducer(initialState, (builder) => {
     .addCase(updateCoupon, (state, action) => ({
       ...state,
       coupon: action.payload,
+    }))
+    .addCase(updateRedeem, (state, action) => ({
+      ...state,
+      redeem: action.payload,
     }));
 });

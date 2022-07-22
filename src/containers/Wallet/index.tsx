@@ -12,6 +12,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { red, green } from '@mui/material/colors';
 
 import DefaultLayout from '@layouts/DefaultLayout';
 import Input from '@components/Input';
@@ -132,21 +133,15 @@ function Library({ defaultQuery, defaultFilter }: LibraryPorps) {
   const renderList = () => {
     if (data.length > 0) {
       return data.map((item) => (
-        <ListItem
-          key={item.id}
-          secondaryAction={
-            <Typography
-              variant="subtitle2"
-              color={item.type === 'income' ? 'success' : 'error'}
-            >
-              {`${item.type === 'income' ? '+' : '-'} ${numeral(
-                item.amount
-              ).format('0,0')}`}
-            </Typography>
-          }
-        >
+        <ListItem key={item.id}>
           <ListItemAvatar>
-            <Avatar>
+            <Avatar
+              sx={
+                item.type === 'income'
+                  ? { background: green[500] }
+                  : { background: red[500] }
+              }
+            >
               {item.type === 'income' ? (
                 <CloudDownloadIcon />
               ) : (
@@ -163,6 +158,14 @@ function Library({ defaultQuery, defaultFilter }: LibraryPorps) {
                 typeof item.date === 'string' ? new Date(item.date) : item.date,
                 'fullDateTime'
               )}
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              color={item.type === 'income' ? green[500] : red[500]}
+            >
+              {`${item.type === 'income' ? '+' : '-'} ${numeral(
+                item.amount
+              ).format('0,0')}`}
             </Typography>
           </ListItemText>
         </ListItem>

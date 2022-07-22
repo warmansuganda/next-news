@@ -1,17 +1,26 @@
 import { AnyAction } from '@reduxjs/toolkit';
 import { ofType, Epic, combineEpics } from 'redux-observable';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
+import numeral from 'numeral';
 
-import { UserActionTypes } from './types';
+import { createAlert } from '@stores/app';
+import i18n from '@locales/i18n';
+
+import { Coupon, Redeem, UserActionTypes } from './types';
 import {
+  editCoupon,
   updateCoupon,
   updateCouponSuccess,
   updateLibrary,
   updateLibrarySuccess,
+  updateRedeem,
+  updateRedeemSuccess,
   updateWallet,
   updateWalletSkip,
   updateWalletSuccess,
+  walletTransaction,
 } from './actions';
 
 const addLibraryEpic: Epic<AnyAction, AnyAction> = (action$, state$) =>
@@ -96,6 +105,27 @@ const addCouponEpic: Epic<AnyAction, AnyAction> = (action$, state$) =>
     })
   );
 
+const editCouponEpic: Epic<AnyAction, AnyAction> = (action$, state$) =>
+  action$.pipe(
+    ofType(UserActionTypes.EDIT_COUPON),
+    map(({ payload }) => {
+      const coupon = [...state$.value.user.coupon];
+      const index = coupon.findIndex((item: Coupon) => item.id === payload.id);
+
+      if (index > -1) {
+        const element = coupon[index];
+        coupon[index] = {
+          ...payload,
+          chance: element.chance - 1,
+        };
+
+        return updateCoupon(coupon);
+      }
+
+      return updateCouponSuccess();
+    })
+  );
+
 const updateCouponEpic: Epic<AnyAction, AnyAction> = (action$) =>
   action$.pipe(
     ofType(UserActionTypes.UPDATE_COUPON),
@@ -105,11 +135,75 @@ const updateCouponEpic: Epic<AnyAction, AnyAction> = (action$) =>
     map(() => updateCouponSuccess())
   );
 
+const addRedeemEpic: Epic<AnyAction, AnyAction> = (action$, state$) =>
+  action$.pipe(
+    ofType(UserActionTypes.ADD_REDEEM),
+    switchMap(({ payload }) => {
+      const redeem = [...state$.value.user.redeem];
+      const coins = [0, 20000];
+
+      // check rules
+      const rules = redeem.findIndex((item: Redeem) => item.coin === 50000);
+      if (rules === -1) {
+        coins.push(50000);
+      }
+
+      // get random coin
+      const prize = coins[Math.floor(Math.random() * coins.length)];
+
+      // push redeem
+      const id = uuidv4();
+      redeem.push({
+        id,
+        date: new Date(),
+        coupon: payload,
+        coin: prize,
+      });
+
+      return of(
+        updateRedeem(redeem),
+        editCoupon(payload),
+        prize > 0
+          ? walletTransaction({
+              type: 'income',
+              amount: prize,
+              note: i18n.t('Prize from redeem #{{id}}', { id }),
+            })
+          : updateWalletSkip(),
+        prize > 0
+          ? createAlert({
+              severity: 'success',
+              message: i18n.t('Congratulation, you have {{coin}} coin.', {
+                coin: numeral(prize).format('0,0'),
+              }),
+            })
+          : createAlert({
+              severity: 'error',
+              message: i18n.t("Opps, you're out of luck, let's try again!", {
+                coin: prize,
+              }),
+            })
+      );
+    })
+  );
+
+const updateRedeemEpic: Epic<AnyAction, AnyAction> = (action$) =>
+  action$.pipe(
+    ofType(UserActionTypes.UPDATE_REDEEM),
+    tap(({ payload }) => {
+      localStorage.setItem('app:redeem', JSON.stringify(payload));
+    }),
+    map(() => updateRedeemSuccess())
+  );
+
 export const userEpic = combineEpics(
   addLibraryEpic,
   updateLibraryEpic,
   walletTransactionEpic,
   updateWalletSuccessEpic,
   addCouponEpic,
-  updateCouponEpic
+  editCouponEpic,
+  updateCouponEpic,
+  addRedeemEpic,
+  updateRedeemEpic
 );

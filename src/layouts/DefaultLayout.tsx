@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import numeral from 'numeral';
+import Link from 'next/link';
 
 import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
@@ -10,6 +11,7 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import Header from '@components/Header';
 
 import { useAppSelector } from '@hooks/index';
+import { WALLET } from '@constants/path';
 
 interface DefaultLayoutProps {
   children: ReactNode | ReactNode[];
@@ -24,9 +26,11 @@ function DefaultLayout({ children }: DefaultLayoutProps) {
       <Header
         accessoryRight={
           <Tooltip title={t('Your balance')} arrow>
-            <Button startIcon={<MonetizationOnIcon />}>
-              {numeral(user.wallet.balance).format('0,0a')}
-            </Button>
+            <Link href={WALLET}>
+              <Button startIcon={<MonetizationOnIcon />}>
+                {numeral(user.wallet.balance).format('0,0a')}
+              </Button>
+            </Link>
           </Tooltip>
         }
       />

@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import Link from 'next/link';
 
 import { useAppSelector } from '@hooks/index';
+import { HOME } from '@constants/path';
 
 import { HeaderWrapper, HeaderAction, HeaderTitle } from './sytles';
 
@@ -15,7 +16,7 @@ function Header({ accessoryRight }: HeaderProps) {
   return (
     <HeaderWrapper disableGutters maxWidth="xs">
       <HeaderTitle>
-        <Link href="/">
+        <Link href={HOME}>
           <a>
             {app.theme === 'light' ? (
               <svg

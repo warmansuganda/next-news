@@ -1,0 +1,18 @@
+[
+  {
+    "key": "all",
+    "label": "All"
+  },
+  {
+    "key": "most-emailed",
+    "label": "Most Emailed"
+  },
+  {
+    "key": "most-shared",
+    "label": "Most Shared"
+  },
+  {
+    "key": "most-viewed",
+    "label": "Most Viewed"
+  }
+]

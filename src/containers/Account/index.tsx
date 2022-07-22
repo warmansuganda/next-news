@@ -25,7 +25,7 @@ import VerifiedIcon from '@mui/icons-material/Verified';
 
 import { useAppSelector, useAppDispatch } from '@hooks/index';
 import { changeTheme, ThemeType } from '@stores/app';
-import { WALLET, LIBRARY } from '@constants/path';
+import { WALLET, LIBRARY, COUPON } from '@constants/path';
 
 import {
   ProfileCard,
@@ -211,9 +211,11 @@ function Account() {
               {t('Redeem your coupon, and get the prize')}
             </Typography>
           </CouponCaption>
-          <IconButton>
-            <ChevronRightIcon />
-          </IconButton>
+          <Link href={COUPON}>
+            <IconButton>
+              <ChevronRightIcon />
+            </IconButton>
+          </Link>
         </CouponCard>
 
         <ResetButton

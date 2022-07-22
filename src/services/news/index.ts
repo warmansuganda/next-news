@@ -8,6 +8,11 @@ export const fetchNews = (query?: string, page?: number) =>
     params: { ...(query ? { q: query } : {}), page },
   });
 
+export const findNews = (url: string) =>
+  client.get('/svc/search/v2/articlesearch.json', {
+    params: { fq: `web_url:("${url}")` },
+  });
+
 // https://developer.nytimes.com/docs/most-popular-product/1/overview
 export const fetchMostPopularNews = (
   category: MostPopularCategory,

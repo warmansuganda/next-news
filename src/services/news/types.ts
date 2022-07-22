@@ -8,6 +8,8 @@ export interface Author {
 export interface News {
   uri: string;
   web_url: string;
+  abstract: string;
+  lead_paragraph: string;
   pub_date: Date;
   headline: {
     main: string;
@@ -15,6 +17,11 @@ export interface News {
   section_name: string;
   byline: {
     original: string;
+    person: Array<{
+      firstname: string;
+      lastname: string;
+      middlename: string;
+    }>;
   };
   multimedia: Array<{
     subtype: string;
